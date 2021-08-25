@@ -2,9 +2,11 @@
 
 ## Introduction
 
-Here we XXX
+The aim of this tutorial is to provide a worked example (i.e., a function) of how to transform a regridded **netCDF** into a Raster object using R.
 
 ## Data import
+
+Load the required packages.
 
 ```{r, message = FALSE, warning = FALSE, out.width = "40%", eval = FALSE}
 # load packages

@@ -2,10 +2,13 @@
 
 ## Introduction
 
-Here we XXX
+The aim of this tutorial is to provide a worked example of how to calculate climate change metrics using CMIP6 models. The climate-change metrics used in this example are [**Climate Velocity**](https://science.sciencemag.org/content/334/6056/652.abstract) and a [**Relative Climate Exposure**](https://www.researchsquare.com/article/rs-421078/v1) index.
+
+This dataset contains a raster-stack file in format **.grd** of monthly sea surface temperature (tos) for the GFDL-CM4 model under a SSP5-5.8 emission scenario. The model goes from 2015 until 2100.
 
 ## Data import
 
+Load the required packages and the data.
 
 ```{r, message = FALSE, warning = FALSE, eval = FALSE, out.width = "40%"}
 # load packages
@@ -17,13 +20,13 @@ Here we XXX
 
 ## Climate Velocity (VoCC)
 
-_Climate velocity_ is a vector that describes the speed and direction that a point on a gridded map would need to move to remain static in climate space (e.g., to maintain an isoline of a given variable in a univariate environment) under climate change. From an ecological perspective, _climate velocity_ can be conceptualized as the speed and direction in which a species would need to move to maintain its current climate conditions under climate change. For this reason, _climate velocity_ can be considered to represent the potential exposure to climate change faced by a species if the climate moves beyond the physiological tolerance of a local population (Brito-Morales et al. 2018).
+_Climate velocity_ is a vector that describes the speed and direction that a point on a gridded map would need to move to remain static in climate space (e.g., to maintain an isoline of a given variable in a univariate environment) under climate change. From an ecological perspective, _climate velocity_ can be conceptualized as the speed and direction in which a species would need to move to maintain its current climate conditions under climate change. For this reason, _climate velocity_ can be considered to represent the potential exposure to climate change faced by a species if the climate moves beyond the physiological tolerance of a local population. See [Brito-Morales et al. 2018](https://www.sciencedirect.com/science/article/pii/S0169534718300636?casa_token=x8K3zBG-CkwAAAAA:HiDxHChsoKHoonPvIPKOSNQMu3krUEUcMFYOBUYdRLuEhikg2MJ6MdyRKOHenfk3frdXMLjAeyc).
 
 ```{r, out.width = "100%", echo = FALSE}
   knitr::include_graphics("images/VoCC_01.png")
 ```
 
-To calculate _climate velocity_ the R package `VoCC` provides a comprehensive collection of functions that calculate climate velocity and related metrics from their initial formulation to the latest developments.
+To calculate _climate velocity_ the R package `VoCC` provides a comprehensive collection of functions that calculate climate velocity and related metrics from their initial formulation to the latest developments. See [Garcia Molinos et al. 2019](https://besjournals.onlinelibrary.wiley.com/doi/full/10.1111/2041-210X.13295).
 
 ```{r, out.width = "100%", echo = FALSE}
   knitr::include_graphics("images/VoCC_02.png")

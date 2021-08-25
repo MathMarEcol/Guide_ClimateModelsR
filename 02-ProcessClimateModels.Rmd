@@ -405,6 +405,12 @@ merge_files(ipath = "/Users/bri273/Desktop/CDO/models_regrid_vertmean/",
 ```
 
 
+The functions above were build based on OS. For Linux please check:
+
+* __regrid__: [regrid R function](https://github.com/IsaakBM/CDO-climate-data-operators-/blob/master/scripts/r_scripts/01_ClimateModels_regrid02_HPC.R)
+* __ocean layers__: [ocean layer R function](https://github.com/IsaakBM/CDO-climate-data-operators-/blob/master/scripts/r_scripts/02_ClimateModels_olayers02_HPC.R)
+* __merge__: calculates [merge R function](https://github.com/IsaakBM/CDO-climate-data-operators-/blob/master/scripts/r_scripts/03_ClimateModels_MergeFiles02_HPC.R)
+
 ### Some useful CDO functions
 
 CDO is more than just regridding. Some interesting useful functions are:
