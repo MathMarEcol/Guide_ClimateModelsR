@@ -80,12 +80,14 @@ To regrid a **netCDF** file using **CDO** we need to use the argument `remapbil`
 
 ```{r, warning = FALSE}
 # Type in the terminal
-## cdo **-[function]** *input_file* *output_file*
+## cdo remapbil,r360x180 tos_Omon_GFDL-CM4_ssp585_r1i1p1f1_gr_201501-203412.nc test.nc
 ```
 
-This "regridding process" works fine if you have one or two **netCDF** files. However, if you have multiple **netCDF** files/models (which is most cases of CMIP6 models) the best way to do it is to write a *R* script to call CDO through the **system()** function.
+The previous line will create an uniform file at 1deg of spatial resolution. It works fine for one or two **netCDF** files. However, for multiple **netCDF** files/models (which is most cases of CMIP6 models) the best way to auto the process is to write an *R* script that calls CDO through the **system()** function.
 
-This 
+This function will help to search for ANY **netCDF** file in a particular directory and do the "regridding process".
+
+* __Key CDO function__: `remapbil`
 
 
 ```{r, warning = FALSE, out.width = "40%", eval = FALSE}
@@ -174,7 +176,9 @@ regrid(ipath = "/data/ClimateModels/",
 
 ### Models with different ocean depths
 
-Some climate models are build across different depths in the ocean. This following code helps to create 
+Some climate models are build across different depths in the ocean. This function will help to search for ANY **netCDF** file in a particular directory, split the file by different ocean depth layer (e.g., surface, epipelagic, mesopelagic, bathypelagic), and merge those files by estimating a vertical average condition.
+
+* __Key CDO function__: `vertmean`
 
 ```{r, warning = FALSE, out.width = "40%", eval = FALSE}
 # This code was written by Isaac Brito-Morales (i.britomorales@uq.edu.au)
@@ -182,10 +186,10 @@ Some climate models are build across different depths in the ocean. This followi
 # NO GUARANTEES THAT CODE IS CORRECT
 # Caveat Emptor!
 
-# Function's arguments
+# Arguments
 # ipath: directory where the netCDF files are located
-# opath: directory to allocate the new regrided netCDF files
-# resolution = resolution for the regrid process
+# opath1: directory to allocate the split files
+# opath2: directory to allocate the vertical average files
 
 olayer <- function(ipath, opath1, opath2) {
 
@@ -303,7 +307,7 @@ olayer <- function(ipath, opath1, opath2) {
 ```
 
 
-Running the ocean depth layer R function
+Running the ocean depth layer R function will:
 
 ```{r, warning = FALSE, eval = FALSE, out.width = "40%"}
 olayer(ipath = "/data/ClimateModelsRegrid/",
@@ -314,7 +318,9 @@ olayer(ipath = "/data/ClimateModelsRegrid/",
 
 ### Merge several netcdf files with CDO
 
+This function will help to merge several ocean depth layers (from the same model) into a single file.
 
+* __Key CDO function__: `mergetime`
 
 ```{r, warning = FALSE, out.width = "40%", eval = FALSE}
 merge_files <- function(ipath, opath1) {
@@ -399,7 +405,14 @@ merge_files(ipath = "/Users/bri273/Desktop/CDO/models_regrid_vertmean/",
 ```
 
 
+### Some useful CDO functions
 
+CDO is more than just regridding. Some interesting useful functions are:
+
+* __yearmean__: calculates the **annual mean** of a monthly data input **netCDF** file
+* __yearmin__: calculates the **annual min** of a monthly data input **netCDF** file
+* __yearmax__: calculates the **annual max** of a monthly data input **netCDF** file
+* __ensmean__: calculates the **ensemble mean** of several **netCDF** files. If the input files are different models, this function will estimate a mean of all those models
 
 
 

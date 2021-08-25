@@ -2,12 +2,12 @@
 
 ## Introduction
 
+Here we XXX
+
 ## Data import
 
 ```{r, message = FALSE, warning = FALSE, out.width = "40%", eval = FALSE}
 # load packages
-library(doParallel)
-library(foreach)
 library(raster)
 library(ncdf4)
 library(ncdf4.helpers)
