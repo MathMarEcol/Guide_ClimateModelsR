@@ -2,23 +2,23 @@
 
 ## Introduction
 
-Here we will develop prioritizations to identify priority areas for protected area establishment.
+
 
 ## Data import
-
 
 ```{r, message = FALSE, warning = FALSE, eval = FALSE, out.width = "40%"}
 # load packages
   library(raster)
   library(sf)
-  library(exactextractr)
   library(dplyr)
-  library(foreach)
-  library(doParallel) 
+  library(exactextractr)
+  library(stringr)
   library(nngeo)
 ```
 
 ## Function to replace NAs with nearest neighbor
+
+This functions helps to XXX
 
 ```{r, message = FALSE, warning = FALSE, eval = FALSE, out.width = "40%"}
 # Function to replace NAs with nearest neighbor. Function wrtitten by Jason Everett
@@ -44,39 +44,36 @@ Here we will develop prioritizations to identify priority areas for protected ar
 
 ## Raster by spatial polygon object
 
+The objective from the following code is to estimate XXX
+
 ```{r, message = FALSE, warning = FALSE, eval = FALSE, out.width = "40%"}
-# Reading input file
-  shp_file <- st_read(list.files(path = dir.shpfile[i] , pattern = ".shp", full.names = TRUE)) %>% 
-  st_transform(crs = CRS(proj.geo))
-# playing with names
-  col_shp <- colnames(shp_file)
-  col_shp[1] <- ifelse(col_shp[1] == "layer", "id", col_shp[1])
-  colnames(shp_file) <- col_shp
-# Read raster object
-  rs_file <- readAll(raster(list.files(path = dir.olayers[i] , pattern = ".tif", full.names = TRUE)))
-  crs(rs_file) <- CRS("+proj=longlat +datum=WGS84 +ellps=WGS84 +towgs84=0,0,0")
-  weight_rs <- raster::area(rs_file)
-  rs_file <- projectRaster(rs_file, crs = CRS(proj.geo), method = "ngb", over = FALSE)
-  weight_rs <- projectRaster(weight_rs, crs = CRS(proj.geo), method = "ngb", over = FALSE)
-  names(rs_file) <- "layer"
-# Getting cost value by planning unit
-  rs_bypu <- exact_extract(rs_file, shp_file, "weighted_mean", weights = weight_rs)
-  rs_shp <- shp_file %>%
-    dplyr::mutate(climate_feature = rs_bypu) %>%
-    dplyr::relocate(id, climate_feature)
+# Reading the spatial polygon object
+  pu_region <- st_read("data/PlanningUnits/PUs_WeddellSea_100km2.shp")
+  st_crs(pu_region) <- "+proj=laea +lat_0=-90 +lon_0=0 +x_0=0 +y_0=0 +datum=WGS84 +units=m +no_defs"
+  
+# Reading the raster object
+  vocc_file <- raster::raster("data/VoCC/tos/voccMag_tos_GFDL-CM4_ssp585_2015-2100.grd_2050-2100_.tif")
+  crs(vocc_file) <- CRS("+proj=longlat +datum=WGS84 +ellps=WGS84 +towgs84=0,0,0")
+  weight_rs_vocc <- raster::area(vocc_file)
+  vocc_file <- projectRaster(vocc_file, crs = CRS("+proj=laea +lat_0=-90 +lon_0=0 +x_0=0 +y_0=0 +datum=WGS84 +units=m +no_defs"), 
+                             method = "ngb", over = FALSE)
+  weight_vocc <- projectRaster(weight_rs_vocc, crs = CRS("+proj=laea +lat_0=-90 +lon_0=0 +x_0=0 +y_0=0 +datum=WGS84 +units=m +no_defs"), 
+                               method = "ngb", over = FALSE)
+  names(vocc_file) <- "layer"
+  
+# Getting the value by planning unit
+  vocc_bypu <- exact_extract(vocc_file, pu_region, "weighted_mean", weights = weight_vocc)
+  vocc_shp <- pu_region %>%
+    dplyr::mutate(vocc = vocc_bypu) %>%
+    dplyr::relocate(cellID, vocc)
 # Replace NAs with nearest neighbor
-  rs_sfInt <- fCheckNAs(df = rs_shp, vari = names(rs_shp)[2]) %>%
-    dplyr::select(-isna) %>% 
-    dplyr::mutate(area_km2 = as.numeric(st_area(rs_shp)/1e+06)) %>%
-    dplyr::mutate(feature_names = var_name) %>% 
-    dplyr::rename(pu = id) %>% 
-    dplyr::select(pu, area_km2, feature_names, climate_feature)
-  rs_dfInt <- rs_sfInt %>% 
-    as.data.frame() %>% 
-    dplyr::select(pu, area_km2, feature_names, climate_feature)
+  vocc_sfInt <- fCheckNAs(df = vocc_shp, vari = names(vocc_shp)[2]) %>%
+  dplyr::select(-isna)
 ```
 
 ## Spatial polygon object by region of interest
+
+The objective from the following code is to estimate XXX
 
 ```{r, message = FALSE, warning = FALSE, eval = FALSE, out.width = "40%"}
 # Reading Planning Unit Region Shapefile
