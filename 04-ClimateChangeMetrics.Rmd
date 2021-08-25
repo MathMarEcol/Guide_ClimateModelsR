@@ -1,0 +1,79 @@
+# Climate Change Metrics
+
+## Introduction
+
+Here we will develop prioritizations to identify priority areas for protected area establishment.
+
+## Data import
+
+
+```{r, message = FALSE, warning = FALSE, eval = FALSE, out.width = "40%"}
+# load packages
+  library(raster)
+  library(VoCC)
+  library(stringr)
+```
+
+## Climate Velocity (VoCC)
+
+_Climate velocity_ is a vector that describes the speed and direction that a point on a gridded map would need to move to remain static in climate space (e.g., to maintain an isoline of a given variable in a univariate environment) under climate change. From an ecological perspective, _climate velocity_ can be conceptualized as the speed and direction in which a species would need to move to maintain its current climate conditions under climate change. For this reason, _climate velocity_ can be considered to represent the potential exposure to climate change faced by a species if the climate moves beyond the physiological tolerance of a local population (Brito-Morales et al. 2018).
+
+```{r, out.width = "100%", echo = FALSE}
+  knitr::include_graphics("images/VoCC_01.png")
+```
+
+To calculate _climate velocity_ the R package `VoCC` provides a comprehensive collection of functions that calculate climate velocity and related metrics from their initial formulation to the latest developments.
+
+```{r, out.width = "100%", echo = FALSE}
+  knitr::include_graphics("images/VoCC_02.png")
+```
+
+```{r, eval = FALSE, out.width = "40%", eval = FALSE}
+# If Raster is monthly, get annual mean
+  index <- rep(1:nlayers(rs), each = 12, length.out = nlayers(rs))
+  rs <- stackApply(x = rs, indices = index, fun = mean)
+
+# Calculate VoCC
+  # Temporal trend  
+    a <- tempTrend(rs, th = 10)
+  # Spatial gradient
+    b <- spatGrad(rs, th = 0.0001, projected = FALSE)
+  # VoCC local gradient
+    c <- gVoCC(a,b)
+    c$voccMag[] <- ifelse(is.infinite(c$voccMag[]), NA, c$voccMag[]) # replace inf with NAs
+```
+
+## Relative Climate Exposure (RCE)
+
+The RCE is a metric that we developed to obtain information about the amount of exposure to climate warming that local populations of a species would face relative to its experience of variation in seasonal temperatures (Brito-Morales et al. 2021). RCE is calculated as the ratio of the slope of a linear regression of projected mean annual temperatures (°C yr-1) to the current mean seasonal temperature range (°C):
+
+```{r, eval = FALSE, out.width = "40%", eval = FALSE}
+# The current seasonal variation
+  from = 2015
+  to = 2020
+# Getting the years/month to calculate de RCE index
+  names.yrs <- paste("X", seq(as.Date(paste(from, "1", "1", sep = "/")), 
+                              as.Date(paste(to, "12", "1", sep = "/")), by = "month"), 
+                     sep = "") %>%
+    str_replace_all(pattern = "-", replacement = ".")
+# Read and subset the data
+  rs <- readAll(stack("")) %>% 
+    subset(names.yrs)
+# Annual min and max to estimate the rage to get the RCE
+  index <- rep(1:nlayers(rs), each = 12, length.out = nlayers(rs))
+  rs_min <- stackApply(x = rs, indices = index, fun = min)
+  rs_max <- stackApply(x = rs, indices = index, fun = max)
+# Range among the period selected
+  rs_range <- rs_max - rs_min
+  rs_range_mean <- stackApply(x = rs_range, indices = nlayers(rs_range), fun = mean)
+# Get the slope
+  slp  <- (readAll(raster(a))*10)*8 # x10 decadal and x8 for decades (2020-2100)
+# Calculate the RCE
+  RCE <- abs(slp/rs1_range_mean)
+```
+
+
+
+
+
+
