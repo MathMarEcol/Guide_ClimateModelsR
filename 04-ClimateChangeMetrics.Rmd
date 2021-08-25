@@ -12,6 +12,7 @@ Here we will develop prioritizations to identify priority areas for protected ar
   library(raster)
   library(VoCC)
   library(stringr)
+  library(dplyr)
 ```
 
 ## Climate Velocity (VoCC)
@@ -29,18 +30,27 @@ To calculate _climate velocity_ the R package `VoCC` provides a comprehensive co
 ```
 
 ```{r, eval = FALSE, out.width = "40%", eval = FALSE}
+# Load the monthly raster object
+  rs <- raster::stack("data/ClimateModelsRasterMonthly/tos/ssp585/tos_Omon_GFDL-CM4_ssp585_2015-2100.grd")
+# Establish the time period of interest (if applicable)
+  from = 2020
+  to = 2100
+# Define the time period to estimate climate velocity and subset the original raster
+  names.yrs <- paste("X", seq(as.Date(paste(from, "1", "1", sep = "/")), as.Date(paste(to, "12", "1", sep = "/")), by = "month"), sep = "") %>%
+    str_replace_all(pattern = "-", replacement = ".")
+  rs <- raster::subset(rs, names.yrs)
 # If Raster is monthly, get annual mean
   index <- rep(1:nlayers(rs), each = 12, length.out = nlayers(rs))
   rs <- stackApply(x = rs, indices = index, fun = mean)
-
+  
 # Calculate VoCC
-  # Temporal trend  
-    a <- tempTrend(rs, th = 10)
-  # Spatial gradient
-    b <- spatGrad(rs, th = 0.0001, projected = FALSE)
+  # Temporal trend (slope)
+    slp <- tempTrend(rs, th = 10)
+  # Spatial gradient (gradient)
+    grad <- spatGrad(rs, th = 0.0001, projected = FALSE)
   # VoCC local gradient
-    c <- gVoCC(a,b)
-    c$voccMag[] <- ifelse(is.infinite(c$voccMag[]), NA, c$voccMag[]) # replace inf with NAs
+    vocc <- gVoCC(slp, grad)
+    vocc$voccMag[] <- ifelse(is.infinite(vocc$voccMag[]), NA, vocc$voccMag[]) # replace inf with NAs
 ```
 
 ## Relative Climate Exposure (RCE)
@@ -48,16 +58,16 @@ To calculate _climate velocity_ the R package `VoCC` provides a comprehensive co
 The RCE is a metric that we developed to obtain information about the amount of exposure to climate warming that local populations of a species would face relative to its experience of variation in seasonal temperatures (Brito-Morales et al. 2021). RCE is calculated as the ratio of the slope of a linear regression of projected mean annual temperatures (°C yr-1) to the current mean seasonal temperature range (°C):
 
 ```{r, eval = FALSE, out.width = "40%", eval = FALSE}
-# The current seasonal variation
-  from = 2015
-  to = 2020
+# The current seasonal variation (could be any range)
+  from = 2016
+  to = 2021
 # Getting the years/month to calculate de RCE index
   names.yrs <- paste("X", seq(as.Date(paste(from, "1", "1", sep = "/")), 
                               as.Date(paste(to, "12", "1", sep = "/")), by = "month"), 
                      sep = "") %>%
     str_replace_all(pattern = "-", replacement = ".")
 # Read and subset the data
-  rs <- readAll(stack("")) %>% 
+  rs <- readAll(raster::stack("data/ClimateModelsRasterMonthly/tos/ssp585/tos_Omon_GFDL-CM4_ssp585_2015-2100.grd")) %>% 
     subset(names.yrs)
 # Annual min and max to estimate the rage to get the RCE
   index <- rep(1:nlayers(rs), each = 12, length.out = nlayers(rs))
@@ -66,8 +76,18 @@ The RCE is a metric that we developed to obtain information about the amount of 
 # Range among the period selected
   rs_range <- rs_max - rs_min
   rs_range_mean <- stackApply(x = rs_range, indices = nlayers(rs_range), fun = mean)
+  
 # Get the slope
-  slp  <- (readAll(raster(a))*10)*8 # x10 decadal and x8 for decades (2020-2100)
+  from = 2020
+  to = 2100
+  names.yrs <- paste("X", seq(as.Date(paste(from, "1", "1", sep = "/")), as.Date(paste(to, "12", "1", sep = "/")), by = "month"), sep = "") %>%
+    str_replace_all(pattern = "-", replacement = ".")
+  rs <- raster::stack("data/ClimateModelsRasterMonthly/tos/ssp585/tos_Omon_GFDL-CM4_ssp585_2015-2100.grd") %>% 
+    subset(names.yrs)
+  index <- rep(1:nlayers(rs), each = 12, length.out = nlayers(rs))
+  rs <- stackApply(x = rs, indices = index, fun = mean)
+  slp <- ((tempTrend(rs, th = 10))*10)*8 # x10 decadal and x8 for decades (2020-2100)
+
 # Calculate the RCE
   RCE <- abs(slp/rs1_range_mean)
 ```

@@ -1,0 +1,105 @@
+# Raster objectes with Spatial object
+
+## Introduction
+
+Here we will develop prioritizations to identify priority areas for protected area establishment.
+
+## Data import
+
+
+```{r, message = FALSE, warning = FALSE, eval = FALSE, out.width = "40%"}
+# load packages
+  library(raster)
+  library(sf)
+  library(exactextractr)
+  library(dplyr)
+  library(foreach)
+  library(doParallel) 
+  library(nngeo)
+```
+
+## Function to replace NAs with nearest neighbor
+
+```{r, message = FALSE, warning = FALSE, eval = FALSE, out.width = "40%"}
+# Function to replace NAs with nearest neighbor. Function wrtitten by Jason Everett
+  fCheckNAs <- function(df, vari) {
+    if (sum(is.na(pull(df, !!sym(vari))))>0){ # Check if there are NAs
+      gp <- df %>%
+        mutate(isna = is.finite(!!sym(vari))) %>%
+        group_by(isna) %>%
+        group_split()
+      
+      out_na <- gp[[1]] # DF with NAs
+      out_finite <- gp[[2]] # DF without NAs
+      
+      d <- st_nn(out_na, out_finite) %>% # Get nearest neighbour
+        unlist()
+      out_na <- out_na %>%
+        mutate(!!sym(vari) := pull(out_finite, !!sym(vari))[d])
+      df <- rbind(out_finite, out_na)
+    }
+    return(df)
+  }
+```
+
+## Raster by spatial polygon object
+
+```{r, message = FALSE, warning = FALSE, eval = FALSE, out.width = "40%"}
+# Reading input file
+  shp_file <- st_read(list.files(path = dir.shpfile[i] , pattern = ".shp", full.names = TRUE)) %>% 
+  st_transform(crs = CRS(proj.geo))
+# playing with names
+  col_shp <- colnames(shp_file)
+  col_shp[1] <- ifelse(col_shp[1] == "layer", "id", col_shp[1])
+  colnames(shp_file) <- col_shp
+# Read raster object
+  rs_file <- readAll(raster(list.files(path = dir.olayers[i] , pattern = ".tif", full.names = TRUE)))
+  crs(rs_file) <- CRS("+proj=longlat +datum=WGS84 +ellps=WGS84 +towgs84=0,0,0")
+  weight_rs <- raster::area(rs_file)
+  rs_file <- projectRaster(rs_file, crs = CRS(proj.geo), method = "ngb", over = FALSE)
+  weight_rs <- projectRaster(weight_rs, crs = CRS(proj.geo), method = "ngb", over = FALSE)
+  names(rs_file) <- "layer"
+# Getting cost value by planning unit
+  rs_bypu <- exact_extract(rs_file, shp_file, "weighted_mean", weights = weight_rs)
+  rs_shp <- shp_file %>%
+    dplyr::mutate(climate_feature = rs_bypu) %>%
+    dplyr::relocate(id, climate_feature)
+# Replace NAs with nearest neighbor
+  rs_sfInt <- fCheckNAs(df = rs_shp, vari = names(rs_shp)[2]) %>%
+    dplyr::select(-isna) %>% 
+    dplyr::mutate(area_km2 = as.numeric(st_area(rs_shp)/1e+06)) %>%
+    dplyr::mutate(feature_names = var_name) %>% 
+    dplyr::rename(pu = id) %>% 
+    dplyr::select(pu, area_km2, feature_names, climate_feature)
+  rs_dfInt <- rs_sfInt %>% 
+    as.data.frame() %>% 
+    dplyr::select(pu, area_km2, feature_names, climate_feature)
+```
+
+## Spatial polygon object by region of interest
+
+```{r, message = FALSE, warning = FALSE, eval = FALSE, out.width = "40%"}
+# Reading Planning Unit Region Shapefile
+  pu_file <- pu_file
+  pu_region <- st_read(pu_file) %>% 
+    st_transform(crs = CRS(proj.geo))
+# Reading Marine Province Shapefile
+  province <- province_file
+  if(stringr::str_detect(string = province, pattern = ".rds") == TRUE) {
+    bioprovince <- readRDS(province) %>% 
+      st_transform(crs = CRS(proj.geo))
+    } else if (stringr::str_detect(string = province, pattern = ".shp") == TRUE) {
+      bioprovince <- st_read(province) %>% 
+        st_transform(crs = CRS(proj.geo)) %>% 
+        st_make_valid()
+    }
+
+if(prov_name == "Longhurst") {
+  nr <- st_nearest_feature(pu_region, bioprovince)
+  pu_region <- pu_region %>% 
+    dplyr::mutate(province = paste(as.vector(bioprovince$ProvCode[nr]), prov_name, sep = "_")) %>% 
+    dplyr::arrange(layer)
+```
+
+
+

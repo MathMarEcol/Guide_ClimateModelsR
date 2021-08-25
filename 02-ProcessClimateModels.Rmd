@@ -1,6 +1,6 @@
 # Getting Started with Climate Data Operators (CDO)
 
-Here I'm going to describe how to work with **CDO** if you work with **CMIP6** climatic data. **CMIP6** models come in netCDF file format and they are usually really messy to work in R. For example, the resolution of the **CMIP6** NOAA model (SSP1-2.6) is 0.25°. Let say that you want to download that model for the **thetao** variable (sea temperature with depth). The size of that model is ~80gb. It will be really hard just to read that file in R. 
+**CMIP6** models come in netCDF file format and they are usually really messy to work in R. For example, the resolution of the **CMIP6** NOAA model (SSP1-2.6) is 0.25°. Let say that you want to download that model for the **thetao** variable (sea temperature with depth). The size of that model is ~80gb. It will be really hard just to read that file in R. 
 
 The intention with this information and scripts is to provide a basic understanding of how you can use **CDO** to speed-up your **netCDF** file data manipulation. [More info go directly to the Max Planck Institute CDO website](https://code.mpimet.mpg.de/projects/cdo/)
 
