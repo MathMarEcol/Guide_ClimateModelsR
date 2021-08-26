@@ -53,7 +53,7 @@ This functions helps to replace NAs with nearest neighbor interpolation method.
 
 ## Raster by spatial polygon object
 
-The objective from the following code is to estimate XXX
+The aim here is to provide an example of how integrate raster in an sf polygon spatial object
 
 ```{r, message = FALSE, warning = FALSE, eval = FALSE, out.width = "40%"}
 # Reading the spatial polygon object
@@ -82,7 +82,7 @@ The objective from the following code is to estimate XXX
 
 ## Spatial polygon object by region of interest
 
-The objective from the following code is to estimate XXX
+The aim here is to provide a simple script to assign a Longhurst province identifier per planning unit
 
 ```{r, message = FALSE, warning = FALSE, eval = FALSE, out.width = "40%"}
 # Reading the spatial polygon object
