@@ -58,7 +58,7 @@ To calculate _climate velocity_ the R package `VoCC` provides a comprehensive co
 
 ## Relative Climate Exposure (RCE)
 
-The RCE is a metric that we developed to obtain information about the amount of exposure to climate warming that local populations of a species would face relative to its experience of variation in seasonal temperatures (Brito-Morales et al. 2021). RCE is calculated as the ratio of the slope of a linear regression of projected mean annual temperatures (°C yr-1) to the current mean seasonal temperature range (°C):
+The RCE is a metric that we developed to obtain information about the amount of exposure to climate warming that local populations of a species would face relative to its experience of variation in seasonal temperatures [Brito-Morales et al. 2021](https://www.researchsquare.com/article/rs-421078/v1). RCE is calculated as the ratio of the slope of a linear regression of projected mean annual temperatures (°C yr-1) to the current mean seasonal temperature range (°C):
 
 ```{r, eval = FALSE, out.width = "40%", eval = FALSE}
 # The current seasonal variation (could be any range)

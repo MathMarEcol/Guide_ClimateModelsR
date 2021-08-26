@@ -1,10 +1,19 @@
-# Raster objectes with Spatial object
+# Raster objectes and Spatial object
 
 ## Introduction
 
-Here we XXX
+The aim here is to provide a worked example of how intersect rasters with spatial polygon objects using the _sf R_ and _exactextractr R_ packages.
+
+This example used two objects.
+
+* __spatial polygon object__: located at data/PlanningUnits/PUs_WeddellSea_100km2.shp. This object contains hexagonal polygons of equal area. It has two columns: integer unique identifiers ("id"), geometry information ("geometry")  
+* __raster object__: located at data/VoCC/tos/voccMag_tos_GFDL-CM4_ssp585_2015-2100.grd_2050-2100_.tif. This object is a raster _.tif_ object of climate-velocity estimates in the southern ocean.
+
+The objective here is to assign to eash hexagon in the _spatial polygon object_ a climate velocity value
 
 ## Data import
+
+First, load the required packages and the data.
 
 ```{r, message = FALSE, warning = FALSE, eval = FALSE, out.width = "40%"}
 # load packages
@@ -18,7 +27,7 @@ Here we XXX
 
 ## Function to replace NAs with nearest neighbor
 
-This functions helps to XXX
+This functions helps to replace NAs with nearest neighbor interpolation method.
 
 ```{r, message = FALSE, warning = FALSE, eval = FALSE, out.width = "40%"}
 # Function to replace NAs with nearest neighbor. Function wrtitten by Jason Everett
@@ -76,22 +85,14 @@ The objective from the following code is to estimate XXX
 The objective from the following code is to estimate XXX
 
 ```{r, message = FALSE, warning = FALSE, eval = FALSE, out.width = "40%"}
-# Reading Planning Unit Region Shapefile
-  pu_file <- pu_file
-  pu_region <- st_read(pu_file) %>% 
-    st_transform(crs = CRS(proj.geo))
-# Reading Marine Province Shapefile
-  province <- province_file
-  if(stringr::str_detect(string = province, pattern = ".rds") == TRUE) {
-    bioprovince <- readRDS(province) %>% 
-      st_transform(crs = CRS(proj.geo))
-    } else if (stringr::str_detect(string = province, pattern = ".shp") == TRUE) {
-      bioprovince <- st_read(province) %>% 
-        st_transform(crs = CRS(proj.geo)) %>% 
-        st_make_valid()
-    }
-
-if(prov_name == "Longhurst") {
+# Reading the spatial polygon object
+  pu_region <- st_read("data/PlanningUnits/PUs_WeddellSea_100km2.shp") %>% 
+    st_transform(crs = CRS("+proj=laea +lat_0=-90 +lon_0=0 +x_0=0 +y_0=0 +datum=WGS84 +units=m +no_defs"))
+# Reading Longhurst Provinces Shapefile
+  bioprovince <- st_read("data/Boundaries/LonghurstProvinces/Longhurst_world_v4_2010.shp") %>% 
+    st_transform(crs = CRS("+proj=laea +lat_0=-90 +lon_0=0 +x_0=0 +y_0=0 +datum=WGS84 +units=m +no_defs")) %>% 
+    st_make_valid()
+# Get the Longhurst Provinces per Planning unit
   nr <- st_nearest_feature(pu_region, bioprovince)
   pu_region <- pu_region %>% 
     dplyr::mutate(province = paste(as.vector(bioprovince$ProvCode[nr]), prov_name, sep = "_")) %>% 
