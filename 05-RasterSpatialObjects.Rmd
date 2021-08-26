@@ -1,4 +1,4 @@
-# Raster objectes and Spatial object
+# Raster objects and Spatial object
 
 ## Introduction
 
