@@ -6,8 +6,8 @@ The aim here is to provide a worked example of how intersect rasters with spatia
 
 This example used two objects.
 
-* __spatial polygon object__: located at data/PlanningUnits/PUs_WeddellSea_100km2.shp. This object contains hexagonal polygons of equal area. It has two columns: integer unique identifiers ("id"), geometry information ("geometry")  
-* __raster object__: located at data/VoCC/tos/voccMag_tos_GFDL-CM4_ssp585_2015-2100.grd_2050-2100_.tif. This object is a raster _.tif_ object of climate-velocity estimates in the southern ocean.
+* __spatial polygon object__: located at `data/PlanningUnits/PUs_WeddellSea_100km2.shp`. This object contains hexagonal polygons of equal area. It has two columns: integer unique identifiers ("id"), geometry information ("geometry")  
+* __raster object__: located at `data/VoCC/tos/voccMag_tos_GFDL-CM4_ssp585_2015-2100.grd_2050-2100_.tif`. This object is a raster _.tif_ object of climate-velocity estimates in the southern ocean.
 
 The objective here is to assign to eash hexagon in the _spatial polygon object_ a climate velocity value
 
