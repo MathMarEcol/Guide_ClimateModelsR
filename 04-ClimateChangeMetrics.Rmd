@@ -22,6 +22,8 @@ Load the required packages and the data.
 
 _Climate velocity_ is a vector that describes the speed and direction that a point on a gridded map would need to move to remain static in climate space (e.g., to maintain an isoline of a given variable in a univariate environment) under climate change. From an ecological perspective, _climate velocity_ can be conceptualized as the speed and direction in which a species would need to move to maintain its current climate conditions under climate change. For this reason, _climate velocity_ can be considered to represent the potential exposure to climate change faced by a species if the climate moves beyond the physiological tolerance of a local population. See [Brito-Morales et al. 2018](https://www.sciencedirect.com/science/article/pii/S0169534718300636?casa_token=x8K3zBG-CkwAAAAA:HiDxHChsoKHoonPvIPKOSNQMu3krUEUcMFYOBUYdRLuEhikg2MJ6MdyRKOHenfk3frdXMLjAeyc).
 
+[Install the R package: GitHub Repo](https://github.com/JorGarMol/VoCC)
+
 ```{r, out.width = "100%", echo = FALSE}
   knitr::include_graphics("images/VoCC_01.png")
 ```

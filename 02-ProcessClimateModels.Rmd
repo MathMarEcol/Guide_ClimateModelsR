@@ -178,6 +178,7 @@ regrid(ipath = "/data/ClimateModels/",
 
 Some climate models are build across different depths in the ocean. This function will help to search for ANY **netCDF** file in a particular directory, split the file by different ocean depth layer (e.g., surface, epipelagic, mesopelagic, bathypelagic), and merge those files by estimating a vertical average condition.
 
+* __CDO functions__: `showname` `sellevel` `selname`
 * __Key CDO function__: `vertmean`
 
 ```{r, warning = FALSE, out.width = "40%", eval = FALSE}
