@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>Chapter 2 CMIP6 models | Climate models for ecologist</title>
+<meta name="author" content="Isaac Brito-Morales">
+<meta name="description" content="CMIP6 stands for Coupled Model Intercomparison Project (CMIP). These are climate models that simulate the physics, chemistry and biology of the atmosphere in detail (some of them!). The 2013 IPCC...">
+<meta name="generator" content="bookdown 0.23 with bs4_book()">
+<meta property="og:title" content="Chapter 2 CMIP6 models | Climate models for ecologist">
+<meta property="og:type" content="book">
+<meta property="og:description" content="CMIP6 stands for Coupled Model Intercomparison Project (CMIP). These are climate models that simulate the physics, chemistry and biology of the atmosphere in detail (some of them!). The 2013 IPCC...">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Chapter 2 CMIP6 models | Climate models for ecologist">
+<meta name="twitter:description" content="CMIP6 stands for Coupled Model Intercomparison Project (CMIP). These are climate models that simulate the physics, chemistry and biology of the atmosphere in detail (some of them!). The 2013 IPCC...">
+<!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href="libs/bootstrap-4.6.0/bootstrap.min.css" rel="stylesheet">
+<script src="libs/bootstrap-4.6.0/bootstrap.bundle.min.js"></script><script src="libs/bs3compat-0.2.5.1/tabs.js"></script><script src="libs/bs3compat-0.2.5.1/bs3compat.js"></script><link href="libs/bs4_book-1.0.0/bs4_book.css" rel="stylesheet">
+<script src="libs/bs4_book-1.0.0/bs4_book.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- CSS --><link rel="stylesheet" href="bs4_style.css">
+</head>
+<body data-spy="scroll" data-target="#toc">
+
+<div class="container-fluid">
+<div class="row">
+  <header class="col-sm-12 col-lg-3 sidebar sidebar-book"><a class="sr-only sr-only-focusable" href="#content">Skip to main content</a>
+
+    <div class="d-flex align-items-start justify-content-between">
+      <h1>
+        <a href="index.html" title="">Climate models for ecologist</a>
+      </h1>
+      <button class="btn btn-outline-primary d-lg-none ml-2 mt-1" type="button" data-toggle="collapse" data-target="#main-nav" aria-expanded="true" aria-controls="main-nav"><i class="fas fa-bars"></i><span class="sr-only">Show table of contents</span></button>
+    </div>
+
+    <div id="main-nav" class="collapse-lg">
+      <form role="search">
+        <input id="search" class="form-control" type="search" placeholder="Search" aria-label="Search">
+</form>
+
+      <nav aria-label="Table of contents"><h2>Table of contents</h2>
+        <ul class="book-toc list-unstyled">
+<li><a class="" href="index.html"><span class="header-section-number">1</span> Welcome</a></li>
+<li><a class="active" href="cmip6-models.html"><span class="header-section-number">2</span> CMIP6 models</a></li>
+<li><a class="" href="getting-started-with-climate-data-operators-cdo.html"><span class="header-section-number">3</span> Getting Started with Climate Data Operators (CDO)</a></li>
+<li><a class="" href="netcdf-files-in-r-raster-spatial-objects.html"><span class="header-section-number">4</span> netCDF files in R: Raster, Spatial objects</a></li>
+<li><a class="" href="climate-change-metrics.html"><span class="header-section-number">5</span> Climate Change Metrics</a></li>
+<li><a class="" href="raster-objects-and-spatial-object.html"><span class="header-section-number">6</span> Raster objects and Spatial object</a></li>
+<li><a class="" href="references.html">References</a></li>
+</ul>
+
+        <div class="book-extra">
+          <p><a id="book-repo" href="https://github.com/rstudio/bookdown-demo">View book source <i class="fab fa-github"></i></a></p>
+        </div>
+      </nav>
+</div>
+  </header><main class="col-sm-12 col-md-9 col-lg-7" id="content"><div id="cmip6-models" class="section level1">
+<h1>
+<span class="header-section-number">2</span> CMIP6 models<a class="anchor" aria-label="anchor" href="#cmip6-models"><i class="fas fa-link"></i></a>
+</h1>
+<p><strong>CMIP6</strong> stands for Coupled Model Intercomparison Project (CMIP). These are climate models that simulate the physics, chemistry and biology of the atmosphere in detail (some of them!). The 2013 IPCC fifth assessment report (AR5) featured climate models from CMIP5, while the upcoming 2021 IPCC sixth assessment report (AR6) will feature new state-of-the-art CMIP6 models (<a href="https://www.carbonbrief.org/cmip6-the-next-generation-of-climate-models-explained">more info in Carbon Brief website.</a>)</p>
+<p>The main goal is to set future climate scenarios based on <em>future</em> concentrations of <strong>greenhouse gases</strong>, <strong>aerosols</strong> and other <a href="https://www.carbonbrief.org/qa-how-do-climate-models-work#inout"><strong>climate forcings</strong></a> to project what might happen in the future.</p>
+<div class="inline-figure"><img src="images/cmip6_mips.jpg" width="100%" style="display: block; margin: auto;"></div>
+<p>Schematic of the CMIP/CMIP6 experimental design</p>
+<div id="most-common-climate-scenarios" class="section level2">
+<h2>
+<span class="header-section-number">2.1</span> Most common climate scenarios<a class="anchor" aria-label="anchor" href="#most-common-climate-scenarios"><i class="fas fa-link"></i></a>
+</h2>
+<p>From CMIP5 version you will find those as RCPs (Representative Concentration Pathways) but for the new CMIP6 version they are called SSPs (Shared Socio‐Economic Pathways).</p>
+<div class="inline-figure"><img src="images/ssps.png" width="100%" style="display: block; margin: auto;"></div>
+<p>Overview of SSPs</p>
+<p><strong>Most commonly SSPs used</strong>:</p>
+<ul>
+<li>SSP1-2.6: An optimistic scenario, characterised by a shift to a more sustainable economy and reduction in inequality resulting in a peak in radiative forcing of ~3 W m-2 before 2100</li>
+<li>SSP2-4.5: An intermediate scenario, with a stabilisation of radiative forcing levels at ~4.5 W m-2 by 2100</li>
+<li>SSP5-8.5: Characterised by a continued increase of greenhouse gas emissions resulting from a fossil-fuel-based economy and increased energy demand, with a radiative forcing &gt;8.5 W m-2 by 2100</li>
+</ul>
+</div>
+<div id="how-to-download-cmip6-models" class="section level2">
+<h2>
+<span class="header-section-number">2.2</span> How to download CMIP6 models<a class="anchor" aria-label="anchor" href="#how-to-download-cmip6-models"><i class="fas fa-link"></i></a>
+</h2>
+<p>CMIP6 models are free available at the <a href="https://esgf.llnl.gov/"><strong>Earth System Grid Federation</strong></a> website. You will need an account to download models. <a href="https://esgf.github.io/esgf-user-support/user_guide.html"><strong>Check this tutorial</strong></a> of how to create an account.</p>
+<p>Through the website:</p>
+<ul>
+<li>Click <a href="https://esgf.llnl.gov/">here</a> to open the ESGF website</li>
+<li>Go to the <em>Nodes</em> tab to explore the different ESGF-CoG nodes</li>
+<li>Click the <a href="https://esgf.nci.org.au/projects/esgf-nci/">NCI</a> link, the Australia National Computational Infrastructure node</li>
+</ul>
+<p>Select a <a href="https://esgf.nci.org.au/projects/esgf-nci/">NCI</a> node, go to collection and then <a href="https://esgf.nci.org.au/search/cmip6-nci/">CMIP6</a> link. This is the main website to download CMIP6 models. At your left you have several filters that you can play with, my advice is filter first for variable.</p>
+<div id="variables" class="section level3">
+<h3>
+<span class="header-section-number">2.2.1</span> Variables<a class="anchor" aria-label="anchor" href="#variables"><i class="fas fa-link"></i></a>
+</h3>
+<p>There are a range of variables available from the GCM (General Circulation Model) outputs. Each tab has different model variable on different time scales. The tabs are in alphabetical order. The ones starting with “O” are for Ocean, and then followed by the timescale (clim = climatology, day, dec = decade, mon = month, yr) (source: <a href="https://mathmarecol.github.io/Welcome/">Mathematical Marine Ecology Welcome Book Chapter 9</a>).</p>
+<p>From the left tab:</p>
+<ul>
+<li>click the <strong>+</strong> in the <strong>variable</strong> option. Select <strong>tos</strong> (ocean temperature on surface). Then click <strong>Search</strong>
+</li>
+<li>click the <strong>+</strong> in the <strong>Realm</strong> option. Select <strong>ocean</strong> and <strong>ocnBgChem</strong>. Then click <strong>Search</strong>
+</li>
+<li>click the <strong>+</strong> in the <strong>Frequency</strong> option. Select <strong>mon</strong>. Then click <strong>Search</strong>
+</li>
+<li>click the <strong>+</strong> in the <strong>Variant Label</strong> option. Select <strong>r1i1p1f1</strong> (this is the most common ensemble). Then click <strong>Search</strong>
+</li>
+</ul>
+<p>The ensemble names “r1i1p1”, “r2i1p1”, etc. in <strong>Variant Label</strong> indicate that the ensemble members differ only in their initial conditions (the model physics are the same for all ensemble members, but the members were initialized from different initial conditions out of the control simulation). Hence, the differences between the ensemble members represent internal variability.</p>
+<ul>
+<li>click the <strong>+</strong> in the <strong>Experiment ID</strong> option. In this option you will see every single <em>Experiment/Simulation</em>. For example, <strong>G1/G6/G7</strong> are the geoengineering climate scenarios. Go to the bottom of the <strong>Experiment ID</strong> tab and click <strong>ssp126</strong>. Then click <strong>Search</strong>
+</li>
+<li>click the <strong>+</strong> in the <strong>Source ID</strong> option for the full model list and their Institution ID. Let’s click on <strong>ACCESS-CM2</strong> model from the CSIRO. Then click <strong>Search</strong>
+</li>
+</ul>
+<p>If you have follow the previous steps you should get a tab result similar to this:</p>
+<div class="inline-figure"><img src="images/model_example_tab.png" width="100%" style="display: block; margin: auto;"></div>
+<p>To download the model, just click on the <strong>List Files</strong> tab and then select <strong>HTTP Download</strong></p>
+
+</div>
+</div>
+</div>
+  <div class="chapter-nav">
+<div class="prev"><a href="index.html"><span class="header-section-number">1</span> Welcome</a></div>
+<div class="next"><a href="getting-started-with-climate-data-operators-cdo.html"><span class="header-section-number">3</span> Getting Started with Climate Data Operators (CDO)</a></div>
+</div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
+    <nav id="toc" data-toggle="toc" aria-label="On this page"><h2>On this page</h2>
+      <ul class="nav navbar-nav">
+<li><a class="nav-link" href="#cmip6-models"><span class="header-section-number">2</span> CMIP6 models</a></li>
+<li><a class="nav-link" href="#most-common-climate-scenarios"><span class="header-section-number">2.1</span> Most common climate scenarios</a></li>
+<li>
+<a class="nav-link" href="#how-to-download-cmip6-models"><span class="header-section-number">2.2</span> How to download CMIP6 models</a><ul class="nav navbar-nav"><li><a class="nav-link" href="#variables"><span class="header-section-number">2.2.1</span> Variables</a></li></ul>
+</li>
+</ul>
+
+      <div class="book-extra">
+        <ul class="list-unstyled">
+<li><a id="book-source" href="https://github.com/rstudio/bookdown-demo/blob/master/01-ClimateModels.Rmd">View source <i class="fab fa-github"></i></a></li>
+          <li><a id="book-edit" href="https://github.com/rstudio/bookdown-demo/edit/master/01-ClimateModels.Rmd">Edit this page <i class="fab fa-github"></i></a></li>
+        </ul>
+</div>
+    </nav>
+</div>
+
+</div>
+</div> <!-- .container -->
+
+<footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>"<strong>Climate models for ecologist</strong>" was written by Isaac Brito-Morales. It was last built on 2021-09-02.</p>
+  </div>
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>This book was built by the <a class="text-light" href="https://bookdown.org">bookdown</a> R package.</p>
+  </div>
+
+</div></div>
+</footer>
+</body>
+</html>

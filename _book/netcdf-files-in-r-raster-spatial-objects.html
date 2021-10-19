@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>Chapter 4 netCDF files in R: Raster, Spatial objects | Climate models for ecologist</title>
+<meta name="author" content="Isaac Brito-Morales">
+<meta name="description" content="4.1 Introduction The aim of this tutorial is to provide a worked example (i.e., a function) of how to transform a regridded netCDF into a Raster object using R.  4.2 Data import Load the required...">
+<meta name="generator" content="bookdown 0.23 with bs4_book()">
+<meta property="og:title" content="Chapter 4 netCDF files in R: Raster, Spatial objects | Climate models for ecologist">
+<meta property="og:type" content="book">
+<meta property="og:description" content="4.1 Introduction The aim of this tutorial is to provide a worked example (i.e., a function) of how to transform a regridded netCDF into a Raster object using R.  4.2 Data import Load the required...">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Chapter 4 netCDF files in R: Raster, Spatial objects | Climate models for ecologist">
+<meta name="twitter:description" content="4.1 Introduction The aim of this tutorial is to provide a worked example (i.e., a function) of how to transform a regridded netCDF into a Raster object using R.  4.2 Data import Load the required...">
+<!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href="libs/bootstrap-4.6.0/bootstrap.min.css" rel="stylesheet">
+<script src="libs/bootstrap-4.6.0/bootstrap.bundle.min.js"></script><script src="libs/bs3compat-0.2.5.1/tabs.js"></script><script src="libs/bs3compat-0.2.5.1/bs3compat.js"></script><link href="libs/bs4_book-1.0.0/bs4_book.css" rel="stylesheet">
+<script src="libs/bs4_book-1.0.0/bs4_book.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- CSS --><link rel="stylesheet" href="bs4_style.css">
+</head>
+<body data-spy="scroll" data-target="#toc">
+
+<div class="container-fluid">
+<div class="row">
+  <header class="col-sm-12 col-lg-3 sidebar sidebar-book"><a class="sr-only sr-only-focusable" href="#content">Skip to main content</a>
+
+    <div class="d-flex align-items-start justify-content-between">
+      <h1>
+        <a href="index.html" title="">Climate models for ecologist</a>
+      </h1>
+      <button class="btn btn-outline-primary d-lg-none ml-2 mt-1" type="button" data-toggle="collapse" data-target="#main-nav" aria-expanded="true" aria-controls="main-nav"><i class="fas fa-bars"></i><span class="sr-only">Show table of contents</span></button>
+    </div>
+
+    <div id="main-nav" class="collapse-lg">
+      <form role="search">
+        <input id="search" class="form-control" type="search" placeholder="Search" aria-label="Search">
+</form>
+
+      <nav aria-label="Table of contents"><h2>Table of contents</h2>
+        <ul class="book-toc list-unstyled">
+<li><a class="" href="index.html"><span class="header-section-number">1</span> Welcome</a></li>
+<li><a class="" href="cmip6-models.html"><span class="header-section-number">2</span> CMIP6 models</a></li>
+<li><a class="" href="getting-started-with-climate-data-operators-cdo.html"><span class="header-section-number">3</span> Getting Started with Climate Data Operators (CDO)</a></li>
+<li><a class="active" href="netcdf-files-in-r-raster-spatial-objects.html"><span class="header-section-number">4</span> netCDF files in R: Raster, Spatial objects</a></li>
+<li><a class="" href="climate-change-metrics.html"><span class="header-section-number">5</span> Climate Change Metrics</a></li>
+<li><a class="" href="raster-objects-and-spatial-object.html"><span class="header-section-number">6</span> Raster objects and Spatial object</a></li>
+<li><a class="" href="references.html">References</a></li>
+</ul>
+
+        <div class="book-extra">
+          <p><a id="book-repo" href="https://github.com/rstudio/bookdown-demo">View book source <i class="fab fa-github"></i></a></p>
+        </div>
+      </nav>
+</div>
+  </header><main class="col-sm-12 col-md-9 col-lg-7" id="content"><div id="netcdf-files-in-r-raster-spatial-objects" class="section level1">
+<h1>
+<span class="header-section-number">4</span> netCDF files in R: Raster, Spatial objects<a class="anchor" aria-label="anchor" href="#netcdf-files-in-r-raster-spatial-objects"><i class="fas fa-link"></i></a>
+</h1>
+<div id="introduction" class="section level2">
+<h2>
+<span class="header-section-number">4.1</span> Introduction<a class="anchor" aria-label="anchor" href="#introduction"><i class="fas fa-link"></i></a>
+</h2>
+<p>The aim of this tutorial is to provide a worked example (i.e., a function) of how to transform a regridded <strong>netCDF</strong> into a Raster object using R.</p>
+</div>
+<div id="data-import" class="section level2">
+<h2>
+<span class="header-section-number">4.2</span> Data import<a class="anchor" aria-label="anchor" href="#data-import"><i class="fas fa-link"></i></a>
+</h2>
+<p>Load the required packages.</p>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># load packages</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://rspatial.org/raster">raster</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://cirrus.ucsd.edu/~pierce/ncdf">ncdf4</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://www.r-project.org">ncdf4.helpers</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://www.r-project.org">PCICt</a></span><span class="op">)</span></code></pre></div>
+</div>
+<div id="function-to-transform-netcdf-files-into-raster-objects" class="section level2">
+<h2>
+<span class="header-section-number">4.3</span> Function to transform netCDF files into Raster objects<a class="anchor" aria-label="anchor" href="#function-to-transform-netcdf-files-into-raster-objects"><i class="fas fa-link"></i></a>
+</h2>
+<p>You can read netCDF using <code>raster:::stack</code> or the <code>raster:::terra</code> functions from the <code>raster</code> and <code>terra</code> packages. However, this function allows more control over the outputs.</p>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># This code was written by Isaac Brito-Morales (i.britomorales@uq.edu.au)</span>
+<span class="co"># Please do not distribute this code without permission.</span>
+<span class="co"># NO GUARANTEES THAT CODE IS CORRECT</span>
+<span class="co"># Caveat Emptor!</span>
+ 
+  <span class="va">ncdf_2D_rs</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">nc</span>, <span class="va">from</span>, <span class="va">to</span>, <span class="va">v</span> <span class="op">=</span> <span class="st">"tos"</span>, <span class="va">x</span> <span class="op">=</span> <span class="st">"lon"</span>, <span class="va">y</span> <span class="op">=</span> <span class="st">"lat"</span><span class="op">)</span> <span class="op">{</span>
+  <span class="co"># Extract data from the netCDF file  </span>
+   <span class="va">nc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/ncdf4/man/nc_open.html">nc_open</a></span><span class="op">(</span><span class="va">nc</span><span class="op">)</span>
+   <span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/ncdf4/man/ncvar_get.html">ncvar_get</a></span><span class="op">(</span><span class="va">nc</span>, <span class="va">v</span><span class="op">)</span> <span class="co"># x, y, year </span>
+   <span class="va">dat</span><span class="op">[</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">dat</span>
+   <span class="va">X</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/raster/man/dimensions.html">dim</a></span><span class="op">(</span><span class="va">dat</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>
+   <span class="va">Y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/raster/man/dimensions.html">dim</a></span><span class="op">(</span><span class="va">dat</span><span class="op">)</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span>
+   <span class="va">tt</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/ncdf4.helpers/man/nc.get.time.series.html">nc.get.time.series</a></span><span class="op">(</span><span class="va">nc</span>, v <span class="op">=</span> <span class="st">"time"</span>, time.dim.name <span class="op">=</span> <span class="st">"time"</span><span class="op">)</span>
+   <span class="va">tt</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.POSIXlt.html">as.POSIXct</a></span><span class="op">(</span><span class="va">tt</span><span class="op">)</span>
+   <span class="va">tt</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.Date.html">as.Date</a></span><span class="op">(</span><span class="va">tt</span><span class="op">)</span>
+   <span class="fu"><a href="https://rdrr.io/pkg/ncdf4/man/nc_close.html">nc_close</a></span><span class="op">(</span><span class="va">nc</span><span class="op">)</span>
+   <span class="va">rs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/raster/man/raster.html">raster</a></span><span class="op">(</span>nrow <span class="op">=</span> <span class="va">Y</span>, ncol <span class="op">=</span> <span class="va">X</span><span class="op">)</span> <span class="co"># Make a raster with the right dims</span>
+  <span class="co"># Fix orientation of original data</span>
+    <span class="va">drs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/raster/man/xyFromCell.html">coordinates</a></span><span class="op">(</span><span class="va">rs</span><span class="op">)</span><span class="op">)</span>
+  <span class="co"># Create Rasters Stack</span>
+    <span class="va">rs_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="op">)</span> <span class="co"># empty list to allocate results</span>
+    <span class="va">st</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/raster/man/stack.html">stack</a></span><span class="op">(</span><span class="op">)</span>
+    <span class="kw">for</span> <span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">tt</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span>
+      <span class="va">dt1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/raster/man/rasterFromXYZ.html">rasterFromXYZ</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span><span class="op">(</span><span class="va">drs</span>, <span class="fu"><a href="https://rdrr.io/pkg/raster/man/as.matrix.html">as.vector</a></span><span class="op">(</span><span class="va">dat</span><span class="op">[</span>,, <span class="va">i</span><span class="op">]</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
+      <span class="va">dt1</span><span class="op">[</span><span class="op">]</span><span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html">ifelse</a></span><span class="op">(</span><span class="va">dt1</span><span class="op">[</span><span class="op">]</span> <span class="op">&lt;=</span> <span class="op">-</span><span class="fl">2</span>, <span class="cn">NA</span>, <span class="va">dt1</span><span class="op">[</span><span class="op">]</span><span class="op">)</span> <span class="co"># for some models that have weird temperatures</span>
+      <span class="va">dt1</span><span class="op">[</span><span class="op">]</span><span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html">ifelse</a></span><span class="op">(</span><span class="va">dt1</span><span class="op">[</span><span class="op">]</span> <span class="op">&gt;=</span> <span class="fl">40</span>, <span class="cn">NA</span>, <span class="va">dt1</span><span class="op">[</span><span class="op">]</span><span class="op">)</span> <span class="co"># for some models that have weird temperatures</span>
+      <span class="va">st</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/raster/man/addLayer.html">addLayer</a></span><span class="op">(</span><span class="va">st</span>, <span class="fu"><a href="https://rdrr.io/pkg/raster/man/flip.html">flip</a></span><span class="op">(</span><span class="va">dt1</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span>
+      <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="va">i</span>, <span class="st">" of "</span>, <span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">tt</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
+    <span class="op">}</span>
+    <span class="fu"><a href="https://rdrr.io/pkg/raster/man/names.html">names</a></span><span class="op">(</span><span class="va">st</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/as.Date.html">as.Date</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="va">from</span>, <span class="st">"1"</span>, <span class="st">"1"</span>, sep <span class="op">=</span> <span class="st">"/"</span><span class="op">)</span><span class="op">)</span>, 
+                     <span class="fu"><a href="https://rdrr.io/r/base/as.Date.html">as.Date</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="va">to</span>, <span class="st">"12"</span>, <span class="st">"1"</span>, sep <span class="op">=</span> <span class="st">"/"</span><span class="op">)</span><span class="op">)</span>, by <span class="op">=</span> <span class="st">"month"</span><span class="op">)</span>
+    <span class="fu"><a href="https://rdrr.io/pkg/raster/man/projection.html">crs</a></span><span class="op">(</span><span class="va">st</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="st">"+proj=longlat +datum=WGS84 +ellps=WGS84 +towgs84=0,0,0"</span>
+    <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span><span class="va">st</span><span class="op">)</span>
+    <span class="op">}</span></code></pre></div>
+
+</div>
+</div>
+  <div class="chapter-nav">
+<div class="prev"><a href="getting-started-with-climate-data-operators-cdo.html"><span class="header-section-number">3</span> Getting Started with Climate Data Operators (CDO)</a></div>
+<div class="next"><a href="climate-change-metrics.html"><span class="header-section-number">5</span> Climate Change Metrics</a></div>
+</div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
+    <nav id="toc" data-toggle="toc" aria-label="On this page"><h2>On this page</h2>
+      <ul class="nav navbar-nav">
+<li><a class="nav-link" href="#netcdf-files-in-r-raster-spatial-objects"><span class="header-section-number">4</span> netCDF files in R: Raster, Spatial objects</a></li>
+<li><a class="nav-link" href="#introduction"><span class="header-section-number">4.1</span> Introduction</a></li>
+<li><a class="nav-link" href="#data-import"><span class="header-section-number">4.2</span> Data import</a></li>
+<li><a class="nav-link" href="#function-to-transform-netcdf-files-into-raster-objects"><span class="header-section-number">4.3</span> Function to transform netCDF files into Raster objects</a></li>
+</ul>
+
+      <div class="book-extra">
+        <ul class="list-unstyled">
+<li><a id="book-source" href="https://github.com/rstudio/bookdown-demo/blob/master/03-ncdfRaster.Rmd">View source <i class="fab fa-github"></i></a></li>
+          <li><a id="book-edit" href="https://github.com/rstudio/bookdown-demo/edit/master/03-ncdfRaster.Rmd">Edit this page <i class="fab fa-github"></i></a></li>
+        </ul>
+</div>
+    </nav>
+</div>
+
+</div>
+</div> <!-- .container -->
+
+<footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>"<strong>Climate models for ecologist</strong>" was written by Isaac Brito-Morales. It was last built on 2021-09-02.</p>
+  </div>
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>This book was built by the <a class="text-light" href="https://bookdown.org">bookdown</a> R package.</p>
+  </div>
+
+</div></div>
+</footer>
+</body>
+</html>

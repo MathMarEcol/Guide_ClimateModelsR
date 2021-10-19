@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>Chapter 6 Raster objectes with Spatial object | Climate models for ecologist</title>
+<meta name="author" content="Isaac Brito-Morales">
+<meta name="description" content="6.1 Introduction Here we XXX  6.2 Data import # load packages  library(raster)  library(sf)  library(dplyr)  library(exactextractr)  library(stringr)  library(nngeo)  6.3 Function to replace NAs...">
+<meta name="generator" content="bookdown 0.23 with bs4_book()">
+<meta property="og:title" content="Chapter 6 Raster objectes with Spatial object | Climate models for ecologist">
+<meta property="og:type" content="book">
+<meta property="og:description" content="6.1 Introduction Here we XXX  6.2 Data import # load packages  library(raster)  library(sf)  library(dplyr)  library(exactextractr)  library(stringr)  library(nngeo)  6.3 Function to replace NAs...">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Chapter 6 Raster objectes with Spatial object | Climate models for ecologist">
+<meta name="twitter:description" content="6.1 Introduction Here we XXX  6.2 Data import # load packages  library(raster)  library(sf)  library(dplyr)  library(exactextractr)  library(stringr)  library(nngeo)  6.3 Function to replace NAs...">
+<!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href="libs/bootstrap-4.6.0/bootstrap.min.css" rel="stylesheet">
+<script src="libs/bootstrap-4.6.0/bootstrap.bundle.min.js"></script><script src="libs/bs3compat-0.2.5.1/tabs.js"></script><script src="libs/bs3compat-0.2.5.1/bs3compat.js"></script><link href="libs/bs4_book-1.0.0/bs4_book.css" rel="stylesheet">
+<script src="libs/bs4_book-1.0.0/bs4_book.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- CSS --><link rel="stylesheet" href="bs4_style.css">
+</head>
+<body data-spy="scroll" data-target="#toc">
+
+<div class="container-fluid">
+<div class="row">
+  <header class="col-sm-12 col-lg-3 sidebar sidebar-book"><a class="sr-only sr-only-focusable" href="#content">Skip to main content</a>
+
+    <div class="d-flex align-items-start justify-content-between">
+      <h1>
+        <a href="index.html" title="">Climate models for ecologist</a>
+      </h1>
+      <button class="btn btn-outline-primary d-lg-none ml-2 mt-1" type="button" data-toggle="collapse" data-target="#main-nav" aria-expanded="true" aria-controls="main-nav"><i class="fas fa-bars"></i><span class="sr-only">Show table of contents</span></button>
+    </div>
+
+    <div id="main-nav" class="collapse-lg">
+      <form role="search">
+        <input id="search" class="form-control" type="search" placeholder="Search" aria-label="Search">
+</form>
+
+      <nav aria-label="Table of contents"><h2>Table of contents</h2>
+        <ul class="book-toc list-unstyled">
+<li><a class="" href="index.html"><span class="header-section-number">1</span> Welcome</a></li>
+<li><a class="" href="cmip6-models.html"><span class="header-section-number">2</span> CMIP6 models</a></li>
+<li><a class="" href="getting-started-with-climate-data-operators-cdo.html"><span class="header-section-number">3</span> Getting Started with Climate Data Operators (CDO)</a></li>
+<li><a class="" href="netcdf-files-in-r-raster-spatial-objects.html"><span class="header-section-number">4</span> netCDF files in R: Raster, Spatial objects</a></li>
+<li><a class="" href="climate-change-metrics.html"><span class="header-section-number">5</span> Climate Change Metrics</a></li>
+<li><a class="active" href="raster-objectes-with-spatial-object.html"><span class="header-section-number">6</span> Raster objectes with Spatial object</a></li>
+<li><a class="" href="references.html">References</a></li>
+</ul>
+
+        <div class="book-extra">
+          <p><a id="book-repo" href="https://github.com/rstudio/bookdown-demo">View book source <i class="fab fa-github"></i></a></p>
+        </div>
+      </nav>
+</div>
+  </header><main class="col-sm-12 col-md-9 col-lg-7" id="content"><div id="raster-objectes-with-spatial-object" class="section level1">
+<h1>
+<span class="header-section-number">6</span> Raster objectes with Spatial object<a class="anchor" aria-label="anchor" href="#raster-objectes-with-spatial-object"><i class="fas fa-link"></i></a>
+</h1>
+<div id="introduction-2" class="section level2">
+<h2>
+<span class="header-section-number">6.1</span> Introduction<a class="anchor" aria-label="anchor" href="#introduction-2"><i class="fas fa-link"></i></a>
+</h2>
+<p>Here we XXX</p>
+</div>
+<div id="data-import-2" class="section level2">
+<h2>
+<span class="header-section-number">6.2</span> Data import<a class="anchor" aria-label="anchor" href="#data-import-2"><i class="fas fa-link"></i></a>
+</h2>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># load packages</span>
+  <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://rspatial.org/raster">raster</a></span><span class="op">)</span>
+  <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/">sf</a></span><span class="op">)</span>
+  <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span><span class="op">)</span>
+  <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://isciences.gitlab.io/exactextractr/">exactextractr</a></span><span class="op">)</span>
+  <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://stringr.tidyverse.org">stringr</a></span><span class="op">)</span>
+  <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://michaeldorman.github.io/nngeo/">nngeo</a></span><span class="op">)</span></code></pre></div>
+</div>
+<div id="function-to-replace-nas-with-nearest-neighbor" class="section level2">
+<h2>
+<span class="header-section-number">6.3</span> Function to replace NAs with nearest neighbor<a class="anchor" aria-label="anchor" href="#function-to-replace-nas-with-nearest-neighbor"><i class="fas fa-link"></i></a>
+</h2>
+<p>This functions helps to XXX</p>
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Function to replace NAs with nearest neighbor. Function wrtitten by Jason Everett</span>
+  <span class="va">fCheckNAs</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">df</span>, <span class="va">vari</span><span class="op">)</span> <span class="op">{</span>
+    <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html">pull</a></span><span class="op">(</span><span class="va">df</span>, <span class="op">!</span><span class="op">!</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span><span class="op">(</span><span class="va">vari</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">&gt;</span><span class="fl">0</span><span class="op">)</span><span class="op">{</span> <span class="co"># Check if there are NAs</span>
+      <span class="va">gp</span> <span class="op">&lt;-</span> <span class="va">df</span> <span class="op">%&gt;%</span>
+        <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>isna <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/is.finite.html">is.finite</a></span><span class="op">(</span><span class="op">!</span><span class="op">!</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span><span class="op">(</span><span class="va">vari</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
+        <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="va">isna</span><span class="op">)</span> <span class="op">%&gt;%</span>
+        <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_split.html">group_split</a></span><span class="op">(</span><span class="op">)</span>
+      
+      <span class="va">out_na</span> <span class="op">&lt;-</span> <span class="va">gp</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span> <span class="co"># DF with NAs</span>
+      <span class="va">out_finite</span> <span class="op">&lt;-</span> <span class="va">gp</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span> <span class="co"># DF without NAs</span>
+      
+      <span class="va">d</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://michaeldorman.github.io/nngeo/reference/st_nn.html">st_nn</a></span><span class="op">(</span><span class="va">out_na</span>, <span class="va">out_finite</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="co"># Get nearest neighbour</span>
+        <span class="fu"><a href="https://rdrr.io/r/base/unlist.html">unlist</a></span><span class="op">(</span><span class="op">)</span>
+      <span class="va">out_na</span> <span class="op">&lt;-</span> <span class="va">out_na</span> <span class="op">%&gt;%</span>
+        <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span><span class="op">!</span><span class="op">!</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span><span class="op">(</span><span class="va">vari</span><span class="op">)</span> <span class="op">:=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html">pull</a></span><span class="op">(</span><span class="va">out_finite</span>, <span class="op">!</span><span class="op">!</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/tidyeval-compat.html">sym</a></span><span class="op">(</span><span class="va">vari</span><span class="op">)</span><span class="op">)</span><span class="op">[</span><span class="va">d</span><span class="op">]</span><span class="op">)</span>
+      <span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html">rbind</a></span><span class="op">(</span><span class="va">out_finite</span>, <span class="va">out_na</span><span class="op">)</span>
+    <span class="op">}</span>
+    <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span><span class="va">df</span><span class="op">)</span>
+  <span class="op">}</span></code></pre></div>
+</div>
+<div id="raster-by-spatial-polygon-object" class="section level2">
+<h2>
+<span class="header-section-number">6.4</span> Raster by spatial polygon object<a class="anchor" aria-label="anchor" href="#raster-by-spatial-polygon-object"><i class="fas fa-link"></i></a>
+</h2>
+<p>The objective from the following code is to estimate XXX</p>
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Reading the spatial polygon object</span>
+  <span class="va">pu_region</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_read.html">st_read</a></span><span class="op">(</span><span class="st">"data/PlanningUnits/PUs_WeddellSea_100km2.shp"</span><span class="op">)</span>
+  <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_crs.html">st_crs</a></span><span class="op">(</span><span class="va">pu_region</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="st">"+proj=laea +lat_0=-90 +lon_0=0 +x_0=0 +y_0=0 +datum=WGS84 +units=m +no_defs"</span>
+  
+<span class="co"># Reading the raster object</span>
+  <span class="va">vocc_file</span> <span class="op">&lt;-</span> <span class="fu">raster</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/raster/man/raster.html">raster</a></span><span class="op">(</span><span class="st">"data/VoCC/tos/voccMag_tos_GFDL-CM4_ssp585_2015-2100.grd_2050-2100_.tif"</span><span class="op">)</span>
+  <span class="fu"><a href="https://rdrr.io/pkg/raster/man/projection.html">crs</a></span><span class="op">(</span><span class="va">vocc_file</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu">CRS</span><span class="op">(</span><span class="st">"+proj=longlat +datum=WGS84 +ellps=WGS84 +towgs84=0,0,0"</span><span class="op">)</span>
+  <span class="va">weight_rs_vocc</span> <span class="op">&lt;-</span> <span class="fu">raster</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/raster/man/area.html">area</a></span><span class="op">(</span><span class="va">vocc_file</span><span class="op">)</span>
+  <span class="va">vocc_file</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/raster/man/projectRaster.html">projectRaster</a></span><span class="op">(</span><span class="va">vocc_file</span>, crs <span class="op">=</span> <span class="fu">CRS</span><span class="op">(</span><span class="st">"+proj=laea +lat_0=-90 +lon_0=0 +x_0=0 +y_0=0 +datum=WGS84 +units=m +no_defs"</span><span class="op">)</span>, 
+                             method <span class="op">=</span> <span class="st">"ngb"</span>, over <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
+  <span class="va">weight_vocc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/raster/man/projectRaster.html">projectRaster</a></span><span class="op">(</span><span class="va">weight_rs_vocc</span>, crs <span class="op">=</span> <span class="fu">CRS</span><span class="op">(</span><span class="st">"+proj=laea +lat_0=-90 +lon_0=0 +x_0=0 +y_0=0 +datum=WGS84 +units=m +no_defs"</span><span class="op">)</span>, 
+                               method <span class="op">=</span> <span class="st">"ngb"</span>, over <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
+  <span class="fu"><a href="https://rdrr.io/pkg/raster/man/names.html">names</a></span><span class="op">(</span><span class="va">vocc_file</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="st">"layer"</span>
+  
+<span class="co"># Getting the value by planning unit</span>
+  <span class="va">vocc_bypu</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://isciences.gitlab.io/exactextractr/reference/exact_extract.html">exact_extract</a></span><span class="op">(</span><span class="va">vocc_file</span>, <span class="va">pu_region</span>, <span class="st">"weighted_mean"</span>, weights <span class="op">=</span> <span class="va">weight_vocc</span><span class="op">)</span>
+  <span class="va">vocc_shp</span> <span class="op">&lt;-</span> <span class="va">pu_region</span> <span class="op">%&gt;%</span>
+    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>vocc <span class="op">=</span> <span class="va">vocc_bypu</span><span class="op">)</span> <span class="op">%&gt;%</span>
+    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/relocate.html">relocate</a></span><span class="op">(</span><span class="va">cellID</span>, <span class="va">vocc</span><span class="op">)</span>
+<span class="co"># Replace NAs with nearest neighbor</span>
+  <span class="va">vocc_sfInt</span> <span class="op">&lt;-</span> <span class="fu">fCheckNAs</span><span class="op">(</span>df <span class="op">=</span> <span class="va">vocc_shp</span>, vari <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/raster/man/names.html">names</a></span><span class="op">(</span><span class="va">vocc_shp</span><span class="op">)</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="op">-</span><span class="va">isna</span><span class="op">)</span></code></pre></div>
+</div>
+<div id="spatial-polygon-object-by-region-of-interest" class="section level2">
+<h2>
+<span class="header-section-number">6.5</span> Spatial polygon object by region of interest<a class="anchor" aria-label="anchor" href="#spatial-polygon-object-by-region-of-interest"><i class="fas fa-link"></i></a>
+</h2>
+<p>The objective from the following code is to estimate XXX</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" data-line-number="1"><span class="co"># Reading Planning Unit Region Shapefile</span></a>
+<a class="sourceLine" id="cb18-2" data-line-number="2">  pu_file &lt;-<span class="st"> </span>pu_file</a>
+<a class="sourceLine" id="cb18-3" data-line-number="3">  pu_region &lt;-<span class="st"> </span><span class="kw">st_read</span>(pu_file) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb18-4" data-line-number="4"><span class="st">    </span><span class="kw">st_transform</span>(<span class="dt">crs =</span> <span class="kw">CRS</span>(proj.geo))</a>
+<a class="sourceLine" id="cb18-5" data-line-number="5"><span class="co"># Reading Marine Province Shapefile</span></a>
+<a class="sourceLine" id="cb18-6" data-line-number="6">  province &lt;-<span class="st"> </span>province_file</a>
+<a class="sourceLine" id="cb18-7" data-line-number="7">  <span class="cf">if</span>(stringr<span class="op">::</span><span class="kw">str_detect</span>(<span class="dt">string =</span> province, <span class="dt">pattern =</span> <span class="st">".rds"</span>) <span class="op">==</span><span class="st"> </span><span class="ot">TRUE</span>) {</a>
+<a class="sourceLine" id="cb18-8" data-line-number="8">    bioprovince &lt;-<span class="st"> </span><span class="kw">readRDS</span>(province) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb18-9" data-line-number="9"><span class="st">      </span><span class="kw">st_transform</span>(<span class="dt">crs =</span> <span class="kw">CRS</span>(proj.geo))</a>
+<a class="sourceLine" id="cb18-10" data-line-number="10">    } <span class="cf">else</span> <span class="cf">if</span> (stringr<span class="op">::</span><span class="kw">str_detect</span>(<span class="dt">string =</span> province, <span class="dt">pattern =</span> <span class="st">".shp"</span>) <span class="op">==</span><span class="st"> </span><span class="ot">TRUE</span>) {</a>
+<a class="sourceLine" id="cb18-11" data-line-number="11">      bioprovince &lt;-<span class="st"> </span><span class="kw">st_read</span>(province) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb18-12" data-line-number="12"><span class="st">        </span><span class="kw">st_transform</span>(<span class="dt">crs =</span> <span class="kw">CRS</span>(proj.geo)) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb18-13" data-line-number="13"><span class="st">        </span><span class="kw">st_make_valid</span>()</a>
+<a class="sourceLine" id="cb18-14" data-line-number="14">    }</a>
+<a class="sourceLine" id="cb18-15" data-line-number="15"></a>
+<a class="sourceLine" id="cb18-16" data-line-number="16"><span class="cf">if</span>(prov_name <span class="op">==</span><span class="st"> "Longhurst"</span>) {</a>
+<a class="sourceLine" id="cb18-17" data-line-number="17">  nr &lt;-<span class="st"> </span><span class="kw">st_nearest_feature</span>(pu_region, bioprovince)</a>
+<a class="sourceLine" id="cb18-18" data-line-number="18">  pu_region &lt;-<span class="st"> </span>pu_region <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb18-19" data-line-number="19"><span class="st">    </span>dplyr<span class="op">::</span><span class="kw">mutate</span>(<span class="dt">province =</span> <span class="kw">paste</span>(<span class="kw">as.vector</span>(bioprovince<span class="op">$</span>ProvCode[nr]), prov_name, <span class="dt">sep =</span> <span class="st">"_"</span>)) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb18-20" data-line-number="20"><span class="st">    </span>dplyr<span class="op">::</span><span class="kw">arrange</span>(layer)</a></code></pre></div>
+
+</div>
+</div>
+  <div class="chapter-nav">
+<div class="prev"><a href="climate-change-metrics.html"><span class="header-section-number">5</span> Climate Change Metrics</a></div>
+<div class="next"><a href="references.html">References</a></div>
+</div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
+    <nav id="toc" data-toggle="toc" aria-label="On this page"><h2>On this page</h2>
+      <ul class="nav navbar-nav">
+<li><a class="nav-link" href="#raster-objectes-with-spatial-object"><span class="header-section-number">6</span> Raster objectes with Spatial object</a></li>
+<li><a class="nav-link" href="#introduction-2"><span class="header-section-number">6.1</span> Introduction</a></li>
+<li><a class="nav-link" href="#data-import-2"><span class="header-section-number">6.2</span> Data import</a></li>
+<li><a class="nav-link" href="#function-to-replace-nas-with-nearest-neighbor"><span class="header-section-number">6.3</span> Function to replace NAs with nearest neighbor</a></li>
+<li><a class="nav-link" href="#raster-by-spatial-polygon-object"><span class="header-section-number">6.4</span> Raster by spatial polygon object</a></li>
+<li><a class="nav-link" href="#spatial-polygon-object-by-region-of-interest"><span class="header-section-number">6.5</span> Spatial polygon object by region of interest</a></li>
+</ul>
+
+      <div class="book-extra">
+        <ul class="list-unstyled">
+<li><a id="book-source" href="https://github.com/rstudio/bookdown-demo/blob/master/05-RasterSpatialObjects.Rmd">View source <i class="fab fa-github"></i></a></li>
+          <li><a id="book-edit" href="https://github.com/rstudio/bookdown-demo/edit/master/05-RasterSpatialObjects.Rmd">Edit this page <i class="fab fa-github"></i></a></li>
+        </ul>
+</div>
+    </nav>
+</div>
+
+</div>
+</div> <!-- .container -->
+
+<footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>"<strong>Climate models for ecologist</strong>" was written by Isaac Brito-Morales. It was last built on 2021-08-26.</p>
+  </div>
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>This book was built by the <a class="text-light" href="https://bookdown.org">bookdown</a> R package.</p>
+  </div>
+
+</div></div>
+</footer>
+</body>
+</html>

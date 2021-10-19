@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>Chapter 5 Climate Change Metrics | Climate models for ecologist</title>
+<meta name="author" content="Isaac Brito-Morales">
+<meta name="description" content="5.1 Introduction The aim of this tutorial is to provide a worked example of how to calculate climate change metrics using CMIP6 models. The climate-change metrics used in this example are Climate...">
+<meta name="generator" content="bookdown 0.23 with bs4_book()">
+<meta property="og:title" content="Chapter 5 Climate Change Metrics | Climate models for ecologist">
+<meta property="og:type" content="book">
+<meta property="og:description" content="5.1 Introduction The aim of this tutorial is to provide a worked example of how to calculate climate change metrics using CMIP6 models. The climate-change metrics used in this example are Climate...">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Chapter 5 Climate Change Metrics | Climate models for ecologist">
+<meta name="twitter:description" content="5.1 Introduction The aim of this tutorial is to provide a worked example of how to calculate climate change metrics using CMIP6 models. The climate-change metrics used in this example are Climate...">
+<!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href="libs/bootstrap-4.6.0/bootstrap.min.css" rel="stylesheet">
+<script src="libs/bootstrap-4.6.0/bootstrap.bundle.min.js"></script><script src="libs/bs3compat-0.2.5.1/tabs.js"></script><script src="libs/bs3compat-0.2.5.1/bs3compat.js"></script><link href="libs/bs4_book-1.0.0/bs4_book.css" rel="stylesheet">
+<script src="libs/bs4_book-1.0.0/bs4_book.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- CSS --><link rel="stylesheet" href="bs4_style.css">
+</head>
+<body data-spy="scroll" data-target="#toc">
+
+<div class="container-fluid">
+<div class="row">
+  <header class="col-sm-12 col-lg-3 sidebar sidebar-book"><a class="sr-only sr-only-focusable" href="#content">Skip to main content</a>
+
+    <div class="d-flex align-items-start justify-content-between">
+      <h1>
+        <a href="index.html" title="">Climate models for ecologist</a>
+      </h1>
+      <button class="btn btn-outline-primary d-lg-none ml-2 mt-1" type="button" data-toggle="collapse" data-target="#main-nav" aria-expanded="true" aria-controls="main-nav"><i class="fas fa-bars"></i><span class="sr-only">Show table of contents</span></button>
+    </div>
+
+    <div id="main-nav" class="collapse-lg">
+      <form role="search">
+        <input id="search" class="form-control" type="search" placeholder="Search" aria-label="Search">
+</form>
+
+      <nav aria-label="Table of contents"><h2>Table of contents</h2>
+        <ul class="book-toc list-unstyled">
+<li><a class="" href="index.html"><span class="header-section-number">1</span> Welcome</a></li>
+<li><a class="" href="cmip6-models.html"><span class="header-section-number">2</span> CMIP6 models</a></li>
+<li><a class="" href="getting-started-with-climate-data-operators-cdo.html"><span class="header-section-number">3</span> Getting Started with Climate Data Operators (CDO)</a></li>
+<li><a class="" href="netcdf-files-in-r-raster-spatial-objects.html"><span class="header-section-number">4</span> netCDF files in R: Raster, Spatial objects</a></li>
+<li><a class="active" href="climate-change-metrics.html"><span class="header-section-number">5</span> Climate Change Metrics</a></li>
+<li><a class="" href="raster-objects-and-spatial-object.html"><span class="header-section-number">6</span> Raster objects and Spatial object</a></li>
+<li><a class="" href="references.html">References</a></li>
+</ul>
+
+        <div class="book-extra">
+          <p><a id="book-repo" href="https://github.com/rstudio/bookdown-demo">View book source <i class="fab fa-github"></i></a></p>
+        </div>
+      </nav>
+</div>
+  </header><main class="col-sm-12 col-md-9 col-lg-7" id="content"><div id="climate-change-metrics" class="section level1">
+<h1>
+<span class="header-section-number">5</span> Climate Change Metrics<a class="anchor" aria-label="anchor" href="#climate-change-metrics"><i class="fas fa-link"></i></a>
+</h1>
+<div id="introduction-1" class="section level2">
+<h2>
+<span class="header-section-number">5.1</span> Introduction<a class="anchor" aria-label="anchor" href="#introduction-1"><i class="fas fa-link"></i></a>
+</h2>
+<p>The aim of this tutorial is to provide a worked example of how to calculate climate change metrics using CMIP6 models. The climate-change metrics used in this example are <a href="https://science.sciencemag.org/content/334/6056/652.abstract"><strong>Climate Velocity</strong></a> and a <a href="https://www.researchsquare.com/article/rs-421078/v1"><strong>Relative Climate Exposure</strong></a> index.</p>
+<p>This dataset contains a raster-stack file in format <strong>.grd</strong> of monthly sea surface temperature (tos) for the GFDL-CM4 model under a SSP5-5.8 emission scenario. The model goes from 2015 until 2100.</p>
+</div>
+<div id="data-import-1" class="section level2">
+<h2>
+<span class="header-section-number">5.2</span> Data import<a class="anchor" aria-label="anchor" href="#data-import-1"><i class="fas fa-link"></i></a>
+</h2>
+<p>Load the required packages and the data.</p>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># load packages</span>
+  <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://rspatial.org/raster">raster</a></span><span class="op">)</span>
+  <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/JorGarMol/VoCC">VoCC</a></span><span class="op">)</span>
+  <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://stringr.tidyverse.org">stringr</a></span><span class="op">)</span>
+  <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span><span class="op">)</span></code></pre></div>
+</div>
+<div id="climate-velocity-vocc" class="section level2">
+<h2>
+<span class="header-section-number">5.3</span> Climate Velocity (VoCC)<a class="anchor" aria-label="anchor" href="#climate-velocity-vocc"><i class="fas fa-link"></i></a>
+</h2>
+<p><em>Climate velocity</em> is a vector that describes the speed and direction that a point on a gridded map would need to move to remain static in climate space (e.g., to maintain an isoline of a given variable in a univariate environment) under climate change. From an ecological perspective, <em>climate velocity</em> can be conceptualized as the speed and direction in which a species would need to move to maintain its current climate conditions under climate change. For this reason, <em>climate velocity</em> can be considered to represent the potential exposure to climate change faced by a species if the climate moves beyond the physiological tolerance of a local population. See <a href="https://www.sciencedirect.com/science/article/pii/S0169534718300636?casa_token=x8K3zBG-CkwAAAAA:HiDxHChsoKHoonPvIPKOSNQMu3krUEUcMFYOBUYdRLuEhikg2MJ6MdyRKOHenfk3frdXMLjAeyc">Brito-Morales et al. 2018</a>.</p>
+<p><a href="https://github.com/JorGarMol/VoCC">Install the R package: GitHub Repo</a></p>
+<div class="inline-figure"><img src="images/VoCC_01.png" width="100%"></div>
+<p>To calculate <em>climate velocity</em> the R package <code>VoCC</code> provides a comprehensive collection of functions that calculate climate velocity and related metrics from their initial formulation to the latest developments. See <a href="https://besjournals.onlinelibrary.wiley.com/doi/full/10.1111/2041-210X.13295">Garcia Molinos et al. 2019</a>.</p>
+<div class="inline-figure"><img src="images/VoCC_02.png" width="100%"></div>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Load the monthly raster object</span>
+  <span class="va">rs</span> <span class="op">&lt;-</span> <span class="fu">raster</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/raster/man/stack.html">stack</a></span><span class="op">(</span><span class="st">"data/ClimateModelsRasterMonthly/tos/ssp585/tos_Omon_GFDL-CM4_ssp585_2015-2100.grd"</span><span class="op">)</span>
+<span class="co"># Establish the time period of interest (if applicable)</span>
+  <span class="va">from</span> <span class="op">=</span> <span class="fl">2020</span>
+  <span class="va">to</span> <span class="op">=</span> <span class="fl">2100</span>
+<span class="co"># Define the time period to estimate climate velocity and subset the original raster</span>
+  <span class="va">names.yrs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="st">"X"</span>, <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/as.Date.html">as.Date</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="va">from</span>, <span class="st">"1"</span>, <span class="st">"1"</span>, sep <span class="op">=</span> <span class="st">"/"</span><span class="op">)</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/as.Date.html">as.Date</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="va">to</span>, <span class="st">"12"</span>, <span class="st">"1"</span>, sep <span class="op">=</span> <span class="st">"/"</span><span class="op">)</span><span class="op">)</span>, by <span class="op">=</span> <span class="st">"month"</span><span class="op">)</span>, sep <span class="op">=</span> <span class="st">""</span><span class="op">)</span> <span class="op">%&gt;%</span>
+    <span class="fu"><a href="https://stringr.tidyverse.org/reference/str_replace.html">str_replace_all</a></span><span class="op">(</span>pattern <span class="op">=</span> <span class="st">"-"</span>, replacement <span class="op">=</span> <span class="st">"."</span><span class="op">)</span>
+  <span class="va">rs</span> <span class="op">&lt;-</span> <span class="fu">raster</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/raster/man/subset.html">subset</a></span><span class="op">(</span><span class="va">rs</span>, <span class="va">names.yrs</span><span class="op">)</span>
+<span class="co"># If Raster is monthly, get annual mean</span>
+  <span class="va">index</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/pkg/raster/man/nlayers.html">nlayers</a></span><span class="op">(</span><span class="va">rs</span><span class="op">)</span>, each <span class="op">=</span> <span class="fl">12</span>, length.out <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/raster/man/nlayers.html">nlayers</a></span><span class="op">(</span><span class="va">rs</span><span class="op">)</span><span class="op">)</span>
+  <span class="va">rs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/raster/man/stackApply.html">stackApply</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">rs</span>, indices <span class="op">=</span> <span class="va">index</span>, fun <span class="op">=</span> <span class="va">mean</span><span class="op">)</span>
+  
+<span class="co"># Calculate VoCC</span>
+  <span class="co"># Temporal trend (slope)</span>
+    <span class="va">slp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/VoCC/man/tempTrend.html">tempTrend</a></span><span class="op">(</span><span class="va">rs</span>, th <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>
+  <span class="co"># Spatial gradient (gradient)</span>
+    <span class="va">grad</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/VoCC/man/spatGrad.html">spatGrad</a></span><span class="op">(</span><span class="va">rs</span>, th <span class="op">=</span> <span class="fl">0.0001</span>, projected <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
+  <span class="co"># VoCC local gradient</span>
+    <span class="va">vocc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/VoCC/man/gVoCC.html">gVoCC</a></span><span class="op">(</span><span class="va">slp</span>, <span class="va">grad</span><span class="op">)</span>
+    <span class="va">vocc</span><span class="op">$</span><span class="va">voccMag</span><span class="op">[</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html">ifelse</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/is.finite.html">is.infinite</a></span><span class="op">(</span><span class="va">vocc</span><span class="op">$</span><span class="va">voccMag</span><span class="op">[</span><span class="op">]</span><span class="op">)</span>, <span class="cn">NA</span>, <span class="va">vocc</span><span class="op">$</span><span class="va">voccMag</span><span class="op">[</span><span class="op">]</span><span class="op">)</span> <span class="co"># replace inf with NAs</span></code></pre></div>
+</div>
+<div id="relative-climate-exposure-rce" class="section level2">
+<h2>
+<span class="header-section-number">5.4</span> Relative Climate Exposure (RCE)<a class="anchor" aria-label="anchor" href="#relative-climate-exposure-rce"><i class="fas fa-link"></i></a>
+</h2>
+<p>The RCE is a metric that we developed to obtain information about the amount of exposure to climate warming that local populations of a species would face relative to its experience of variation in seasonal temperatures <a href="https://www.researchsquare.com/article/rs-421078/v1">Brito-Morales et al. 2021</a>. RCE is calculated as the ratio of the slope of a linear regression of projected mean annual temperatures (°C yr-1) to the current mean seasonal temperature range (°C):</p>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># The current seasonal variation (could be any range)</span>
+  <span class="va">from</span> <span class="op">=</span> <span class="fl">2016</span>
+  <span class="va">to</span> <span class="op">=</span> <span class="fl">2021</span>
+<span class="co"># Getting the years/month to calculate de RCE index</span>
+  <span class="va">names.yrs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="st">"X"</span>, <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/as.Date.html">as.Date</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="va">from</span>, <span class="st">"1"</span>, <span class="st">"1"</span>, sep <span class="op">=</span> <span class="st">"/"</span><span class="op">)</span><span class="op">)</span>, 
+                              <span class="fu"><a href="https://rdrr.io/r/base/as.Date.html">as.Date</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="va">to</span>, <span class="st">"12"</span>, <span class="st">"1"</span>, sep <span class="op">=</span> <span class="st">"/"</span><span class="op">)</span><span class="op">)</span>, by <span class="op">=</span> <span class="st">"month"</span><span class="op">)</span>, 
+                     sep <span class="op">=</span> <span class="st">""</span><span class="op">)</span> <span class="op">%&gt;%</span>
+    <span class="fu"><a href="https://stringr.tidyverse.org/reference/str_replace.html">str_replace_all</a></span><span class="op">(</span>pattern <span class="op">=</span> <span class="st">"-"</span>, replacement <span class="op">=</span> <span class="st">"."</span><span class="op">)</span>
+<span class="co"># Read and subset the data</span>
+  <span class="va">rs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/raster/man/readAll.html">readAll</a></span><span class="op">(</span><span class="fu">raster</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/raster/man/stack.html">stack</a></span><span class="op">(</span><span class="st">"data/ClimateModelsRasterMonthly/tos/ssp585/tos_Omon_GFDL-CM4_ssp585_2015-2100.grd"</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+    <span class="fu"><a href="https://rdrr.io/pkg/raster/man/subset.html">subset</a></span><span class="op">(</span><span class="va">names.yrs</span><span class="op">)</span>
+<span class="co"># Annual min and max to estimate the rage to get the RCE</span>
+  <span class="va">index</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/pkg/raster/man/nlayers.html">nlayers</a></span><span class="op">(</span><span class="va">rs</span><span class="op">)</span>, each <span class="op">=</span> <span class="fl">12</span>, length.out <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/raster/man/nlayers.html">nlayers</a></span><span class="op">(</span><span class="va">rs</span><span class="op">)</span><span class="op">)</span>
+  <span class="va">rs_min</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/raster/man/stackApply.html">stackApply</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">rs</span>, indices <span class="op">=</span> <span class="va">index</span>, fun <span class="op">=</span> <span class="va">min</span><span class="op">)</span>
+  <span class="va">rs_max</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/raster/man/stackApply.html">stackApply</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">rs</span>, indices <span class="op">=</span> <span class="va">index</span>, fun <span class="op">=</span> <span class="va">max</span><span class="op">)</span>
+<span class="co"># Range among the period selected</span>
+  <span class="va">rs_range</span> <span class="op">&lt;-</span> <span class="va">rs_max</span> <span class="op">-</span> <span class="va">rs_min</span>
+  <span class="va">rs_range_mean</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/raster/man/stackApply.html">stackApply</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">rs_range</span>, indices <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/raster/man/nlayers.html">nlayers</a></span><span class="op">(</span><span class="va">rs_range</span><span class="op">)</span>, fun <span class="op">=</span> <span class="va">mean</span><span class="op">)</span>
+  
+<span class="co"># Get the slope</span>
+  <span class="va">from</span> <span class="op">=</span> <span class="fl">2020</span>
+  <span class="va">to</span> <span class="op">=</span> <span class="fl">2100</span>
+  <span class="va">names.yrs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="st">"X"</span>, <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/as.Date.html">as.Date</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="va">from</span>, <span class="st">"1"</span>, <span class="st">"1"</span>, sep <span class="op">=</span> <span class="st">"/"</span><span class="op">)</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/as.Date.html">as.Date</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="va">to</span>, <span class="st">"12"</span>, <span class="st">"1"</span>, sep <span class="op">=</span> <span class="st">"/"</span><span class="op">)</span><span class="op">)</span>, by <span class="op">=</span> <span class="st">"month"</span><span class="op">)</span>, sep <span class="op">=</span> <span class="st">""</span><span class="op">)</span> <span class="op">%&gt;%</span>
+    <span class="fu"><a href="https://stringr.tidyverse.org/reference/str_replace.html">str_replace_all</a></span><span class="op">(</span>pattern <span class="op">=</span> <span class="st">"-"</span>, replacement <span class="op">=</span> <span class="st">"."</span><span class="op">)</span>
+  <span class="va">rs</span> <span class="op">&lt;-</span> <span class="fu">raster</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/raster/man/stack.html">stack</a></span><span class="op">(</span><span class="st">"data/ClimateModelsRasterMonthly/tos/ssp585/tos_Omon_GFDL-CM4_ssp585_2015-2100.grd"</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+    <span class="fu"><a href="https://rdrr.io/pkg/raster/man/subset.html">subset</a></span><span class="op">(</span><span class="va">names.yrs</span><span class="op">)</span>
+  <span class="va">index</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/pkg/raster/man/nlayers.html">nlayers</a></span><span class="op">(</span><span class="va">rs</span><span class="op">)</span>, each <span class="op">=</span> <span class="fl">12</span>, length.out <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/raster/man/nlayers.html">nlayers</a></span><span class="op">(</span><span class="va">rs</span><span class="op">)</span><span class="op">)</span>
+  <span class="va">rs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/raster/man/stackApply.html">stackApply</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">rs</span>, indices <span class="op">=</span> <span class="va">index</span>, fun <span class="op">=</span> <span class="va">mean</span><span class="op">)</span>
+  <span class="va">slp</span> <span class="op">&lt;-</span> <span class="op">(</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/VoCC/man/tempTrend.html">tempTrend</a></span><span class="op">(</span><span class="va">rs</span>, th <span class="op">=</span> <span class="fl">10</span><span class="op">)</span><span class="op">)</span><span class="op">*</span><span class="fl">10</span><span class="op">)</span><span class="op">*</span><span class="fl">8</span> <span class="co"># x10 decadal and x8 for decades (2020-2100)</span>
+
+<span class="co"># Calculate the RCE</span>
+  <span class="va">RCE</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">abs</a></span><span class="op">(</span><span class="va">slp</span><span class="op">/</span><span class="va">rs1_range_mean</span><span class="op">)</span></code></pre></div>
+
+</div>
+</div>
+  <div class="chapter-nav">
+<div class="prev"><a href="netcdf-files-in-r-raster-spatial-objects.html"><span class="header-section-number">4</span> netCDF files in R: Raster, Spatial objects</a></div>
+<div class="next"><a href="raster-objects-and-spatial-object.html"><span class="header-section-number">6</span> Raster objects and Spatial object</a></div>
+</div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
+    <nav id="toc" data-toggle="toc" aria-label="On this page"><h2>On this page</h2>
+      <ul class="nav navbar-nav">
+<li><a class="nav-link" href="#climate-change-metrics"><span class="header-section-number">5</span> Climate Change Metrics</a></li>
+<li><a class="nav-link" href="#introduction-1"><span class="header-section-number">5.1</span> Introduction</a></li>
+<li><a class="nav-link" href="#data-import-1"><span class="header-section-number">5.2</span> Data import</a></li>
+<li><a class="nav-link" href="#climate-velocity-vocc"><span class="header-section-number">5.3</span> Climate Velocity (VoCC)</a></li>
+<li><a class="nav-link" href="#relative-climate-exposure-rce"><span class="header-section-number">5.4</span> Relative Climate Exposure (RCE)</a></li>
+</ul>
+
+      <div class="book-extra">
+        <ul class="list-unstyled">
+<li><a id="book-source" href="https://github.com/rstudio/bookdown-demo/blob/master/04-ClimateChangeMetrics.Rmd">View source <i class="fab fa-github"></i></a></li>
+          <li><a id="book-edit" href="https://github.com/rstudio/bookdown-demo/edit/master/04-ClimateChangeMetrics.Rmd">Edit this page <i class="fab fa-github"></i></a></li>
+        </ul>
+</div>
+    </nav>
+</div>
+
+</div>
+</div> <!-- .container -->
+
+<footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>"<strong>Climate models for ecologist</strong>" was written by Isaac Brito-Morales. It was last built on 2021-09-02.</p>
+  </div>
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>This book was built by the <a class="text-light" href="https://bookdown.org">bookdown</a> R package.</p>
+  </div>
+
+</div></div>
+</footer>
+</body>
+</html>

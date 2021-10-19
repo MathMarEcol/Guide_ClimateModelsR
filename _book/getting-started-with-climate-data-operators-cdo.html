@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>Chapter 3 Getting Started with Climate Data Operators (CDO) | Climate models for ecologist</title>
+<meta name="author" content="Isaac Brito-Morales">
+<meta name="description" content="CMIP6 models come in netCDF file format and they are usually really messy to work in R. For example, the resolution of the CMIP6 NOAA model (SSP1-2.6) is 0.25°. Let say that you want to download...">
+<meta name="generator" content="bookdown 0.23 with bs4_book()">
+<meta property="og:title" content="Chapter 3 Getting Started with Climate Data Operators (CDO) | Climate models for ecologist">
+<meta property="og:type" content="book">
+<meta property="og:description" content="CMIP6 models come in netCDF file format and they are usually really messy to work in R. For example, the resolution of the CMIP6 NOAA model (SSP1-2.6) is 0.25°. Let say that you want to download...">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Chapter 3 Getting Started with Climate Data Operators (CDO) | Climate models for ecologist">
+<meta name="twitter:description" content="CMIP6 models come in netCDF file format and they are usually really messy to work in R. For example, the resolution of the CMIP6 NOAA model (SSP1-2.6) is 0.25°. Let say that you want to download...">
+<!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href="libs/bootstrap-4.6.0/bootstrap.min.css" rel="stylesheet">
+<script src="libs/bootstrap-4.6.0/bootstrap.bundle.min.js"></script><script src="libs/bs3compat-0.2.5.1/tabs.js"></script><script src="libs/bs3compat-0.2.5.1/bs3compat.js"></script><link href="libs/bs4_book-1.0.0/bs4_book.css" rel="stylesheet">
+<script src="libs/bs4_book-1.0.0/bs4_book.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- CSS --><link rel="stylesheet" href="bs4_style.css">
+</head>
+<body data-spy="scroll" data-target="#toc">
+
+<div class="container-fluid">
+<div class="row">
+  <header class="col-sm-12 col-lg-3 sidebar sidebar-book"><a class="sr-only sr-only-focusable" href="#content">Skip to main content</a>
+
+    <div class="d-flex align-items-start justify-content-between">
+      <h1>
+        <a href="index.html" title="">Climate models for ecologist</a>
+      </h1>
+      <button class="btn btn-outline-primary d-lg-none ml-2 mt-1" type="button" data-toggle="collapse" data-target="#main-nav" aria-expanded="true" aria-controls="main-nav"><i class="fas fa-bars"></i><span class="sr-only">Show table of contents</span></button>
+    </div>
+
+    <div id="main-nav" class="collapse-lg">
+      <form role="search">
+        <input id="search" class="form-control" type="search" placeholder="Search" aria-label="Search">
+</form>
+
+      <nav aria-label="Table of contents"><h2>Table of contents</h2>
+        <ul class="book-toc list-unstyled">
+<li><a class="" href="index.html"><span class="header-section-number">1</span> Welcome</a></li>
+<li><a class="" href="cmip6-models.html"><span class="header-section-number">2</span> CMIP6 models</a></li>
+<li><a class="active" href="getting-started-with-climate-data-operators-cdo.html"><span class="header-section-number">3</span> Getting Started with Climate Data Operators (CDO)</a></li>
+<li><a class="" href="netcdf-files-in-r-raster-spatial-objects.html"><span class="header-section-number">4</span> netCDF files in R: Raster, Spatial objects</a></li>
+<li><a class="" href="climate-change-metrics.html"><span class="header-section-number">5</span> Climate Change Metrics</a></li>
+<li><a class="" href="raster-objects-and-spatial-object.html"><span class="header-section-number">6</span> Raster objects and Spatial object</a></li>
+<li><a class="" href="references.html">References</a></li>
+</ul>
+
+        <div class="book-extra">
+          <p><a id="book-repo" href="https://github.com/rstudio/bookdown-demo">View book source <i class="fab fa-github"></i></a></p>
+        </div>
+      </nav>
+</div>
+  </header><main class="col-sm-12 col-md-9 col-lg-7" id="content"><div id="getting-started-with-climate-data-operators-cdo" class="section level1">
+<h1>
+<span class="header-section-number">3</span> Getting Started with Climate Data Operators (CDO)<a class="anchor" aria-label="anchor" href="#getting-started-with-climate-data-operators-cdo"><i class="fas fa-link"></i></a>
+</h1>
+<p><strong>CMIP6</strong> models come in netCDF file format and they are usually really messy to work in R. For example, the resolution of the <strong>CMIP6</strong> NOAA model (SSP1-2.6) is 0.25°. Let say that you want to download that model for the <strong>thetao</strong> variable (sea temperature with depth). The size of that model is ~80gb. It will be really hard just to read that file in R.</p>
+<p>The intention with this information and scripts is to provide a basic understanding of how you can use <strong>CDO</strong> to speed-up your <strong>netCDF</strong> file data manipulation. <a href="https://code.mpimet.mpg.de/projects/cdo/">More info go directly to the Max Planck Institute CDO website</a></p>
+<div id="installation-process" class="section level2">
+<h2>
+<span class="header-section-number">3.1</span> Installation Process<a class="anchor" aria-label="anchor" href="#installation-process"><i class="fas fa-link"></i></a>
+</h2>
+<div id="macos" class="section level3">
+<h3>
+<span class="header-section-number">3.1.1</span> <strong>MacOS</strong><a class="anchor" aria-label="anchor" href="#macos"><i class="fas fa-link"></i></a>
+</h3>
+<p>Follow the instruction and downloaded <strong>MacPorts</strong>. <strong>MacPorts</strong> is an open-source community initiative to design an easy-to-use system for compiling, installing, and upgrading the command-line on the Mac operating system.</p>
+<p><a href="https://www.macports.org/index.php">MacPorts website</a>
+<a href="https://www.macports.org/install.php">MacPorts download</a></p>
+<p>After the installation (if you have admin rights) open the terminal and type:</p>
+<p><code>port install cdo</code></p>
+<p>If you don’t have admin rights, open the terminal and type:</p>
+<p><code>sudo port install cdo</code> and write your password</p>
+</div>
+<div id="windows-10" class="section level3">
+<h3>
+<span class="header-section-number">3.1.2</span> <strong>Windows 10</strong><a class="anchor" aria-label="anchor" href="#windows-10"><i class="fas fa-link"></i></a>
+</h3>
+<p>In the current windows 10 version(s) Microsoft includes an Ubuntu 16.04 LTS embedded Linux. This environment offers a clean integration with the windows file systems and and the opportunity to install CDO via the native package manager of Ubuntu.</p>
+<p>Install the Ubuntu app from the Microsoft Store application. Then open the Ubuntu terminal and type:</p>
+<p><code>sudo apt-get install cdo</code> and write your password</p>
+</div>
+</div>
+<div id="linux" class="section level2">
+<h2>
+<span class="header-section-number">3.2</span> <strong>Linux</strong><a class="anchor" aria-label="anchor" href="#linux"><i class="fas fa-link"></i></a>
+</h2>
+<p>For Linux go to: <a href="https://code.mpimet.mpg.de/projects/cdo/wiki/Linux_Platform">Linux</a></p>
+</div>
+<div id="ncview-a-netcdf-visual-browser" class="section level2">
+<h2>
+<span class="header-section-number">3.3</span> Ncview: a netCDF visual browser<a class="anchor" aria-label="anchor" href="#ncview-a-netcdf-visual-browser"><i class="fas fa-link"></i></a>
+</h2>
+<p>Ncview is quick visual browser that allows you to explore <strong>netCDF</strong> files very easily: <code>ncview</code>. <code>ncview</code> is an easy to use netCDF file viewer for <strong>linux</strong> and <strong>OS X</strong>. It can read any netCDF file.</p>
+<p>To install <strong>ncview</strong>, open the terminal and type:</p>
+<ul>
+<li>
+<strong>OS X</strong>: <code>port install ncview</code>
+</li>
+<li>
+<strong>Linux</strong>: <code>sudo apt-get install ncview</code>
+</li>
+</ul>
+</div>
+<div id="working-with-cdo" class="section level2">
+<h2>
+<span class="header-section-number">3.4</span> Working with CDO<a class="anchor" aria-label="anchor" href="#working-with-cdo"><i class="fas fa-link"></i></a>
+</h2>
+<p>To work with <strong>CDO</strong> and <strong>ncview</strong> we need to use the terminal command line: the <strong>Ubuntu app</strong> in Windows and the <strong>Terminal</strong> on OS X.</p>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Establish the primary directory (OS or Linux)</span>
+<span class="co">## cd ~/data/ClimateModels/tos/ssp585/</span>
+
+<span class="co"># Establish the primary directory in Windows. It should be located at "/mnt/c/"</span>
+<span class="co">## cd ~/data/ClimateModels/tos/ssp585/</span>
+
+<span class="co"># View the model with ncview</span>
+<span class="co">## ncview tos_Omon_GFDL-CM4_ssp585_r1i1p1f1_gr_201501-203412.nc</span></code></pre></div>
+<div class="inline-figure"><img src="images/ncview01.png" width="100%"></div>
+<p>ncview example</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Check the details by typing in the terminal</span>
+<span class="co">## cdo -sinfov tos_Omon_GFDL-CM4_ssp585_r1i1p1f1_gr_201501-203412.nc</span></code></pre></div>
+<div class="inline-figure"><img src="images/ncview02.png" width="100%"></div>
+<p>Model details</p>
+<div id="regrid-process" class="section level3">
+<h3>
+<span class="header-section-number">3.4.1</span> Regrid process<a class="anchor" aria-label="anchor" href="#regrid-process"><i class="fas fa-link"></i></a>
+</h3>
+<p>To regrid a <strong>netCDF</strong> file using <strong>CDO</strong> we need to use the argument <code>remapbil</code>, which is the stands for bilinear interpolation (there are other methods but this is the most conservative approach). CDO Syntax works like this:</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Type in the terminal</span>
+<span class="co">## cdo remapbil,r360x180 tos_Omon_GFDL-CM4_ssp585_r1i1p1f1_gr_201501-203412.nc test.nc</span></code></pre></div>
+<p>The previous line will create an uniform file at 1deg of spatial resolution. It works fine for one or two <strong>netCDF</strong> files. However, for multiple <strong>netCDF</strong> files/models (which is most cases of CMIP6 models) the best way to auto the process is to write an <em>R</em> script that calls CDO through the <strong>system()</strong> function.</p>
+<p>This function will help to search for ANY <strong>netCDF</strong> file in a particular directory and do the “regridding process”.</p>
+<ul>
+<li>
+<strong>Key CDO function</strong>: <code>remapbil</code>
+</li>
+</ul>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R">
+<span class="co"># This code was written by Isaac Brito-Morales (i.britomorales@uq.edu.au)</span>
+<span class="co"># Please do not distribute this code without permission.</span>
+<span class="co"># NO GUARANTEES THAT CODE IS CORRECT</span>
+<span class="co"># Caveat Emptor!</span>
+
+<span class="co"># Function's arguments</span>
+<span class="co"># ipath: directory where the netCDF files are located</span>
+<span class="co"># opath: directory to allocate the new regrided netCDF files</span>
+<span class="co"># resolution = resolution for the regrid process</span>
+
+<span class="va">regrid</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">ipath</span>, <span class="va">opath</span>, <span class="va">resolution</span><span class="op">)</span> <span class="op">{</span>
+
+<span class="co">####################################################################################</span>
+<span class="co">####### Defining the main packages</span>
+<span class="co">####################################################################################</span>
+  <span class="co"># List of pacakges that we will be used</span>
+    <span class="va">list.of.packages</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"doParallel"</span>, <span class="st">"parallel"</span>, <span class="st">"stringr"</span>, <span class="st">"data.table"</span><span class="op">)</span>
+  <span class="co"># If is not installed, install the pacakge</span>
+    <span class="va">new.packages</span> <span class="op">&lt;-</span> <span class="va">list.of.packages</span><span class="op">[</span><span class="op">!</span><span class="op">(</span><span class="va">list.of.packages</span> <span class="op">%in%</span> <span class="fu"><a href="https://rdrr.io/r/utils/installed.packages.html">installed.packages</a></span><span class="op">(</span><span class="op">)</span><span class="op">[</span>,<span class="st">"Package"</span><span class="op">]</span><span class="op">)</span><span class="op">]</span>
+    <span class="kw">if</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">new.packages</span><span class="op">)</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="va">new.packages</span><span class="op">)</span>
+  <span class="co"># Load packages</span>
+    <span class="fu"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span><span class="op">(</span><span class="va">list.of.packages</span>, <span class="va">require</span>, character.only <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
+  
+<span class="co">####################################################################################</span>
+<span class="co">####### Getting the path and directories for the files</span>
+<span class="co">####################################################################################</span>
+  <span class="co"># Establish the find bash command</span>
+    <span class="va">line1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/noquote.html">noquote</a></span><span class="op">(</span><span class="st">"find"</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/noquote.html">noquote</a></span><span class="op">(</span><span class="va">ipath</span><span class="op">)</span>, <span class="st">"-type"</span>, <span class="st">"f"</span>, <span class="st">"-name"</span>, 
+                   <span class="fu"><a href="https://rdrr.io/r/base/noquote.html">noquote</a></span><span class="op">(</span><span class="st">"*.nc"</span><span class="op">)</span>, <span class="st">"-exec"</span>, <span class="st">"ls"</span>, <span class="st">"-l"</span>, <span class="st">"{}"</span><span class="op">)</span>
+    <span class="va">line2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"\\"</span>, <span class="st">";"</span><span class="op">)</span>
+    <span class="va">line3</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="va">line1</span>, <span class="va">line2</span><span class="op">)</span>
+  <span class="co"># Getting a list of directories for every netCDF file</span>
+    <span class="va">dir_files</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.html">system</a></span><span class="op">(</span><span class="va">line3</span>, intern <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
+    <span class="va">dir_nc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/strsplit.html">strsplit</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">dir_files</span>, split <span class="op">=</span> <span class="st">" "</span><span class="op">)</span>
+    <span class="va">nc_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span><span class="op">(</span><span class="va">dir_nc</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">{</span><span class="va">f1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html">tail</a></span><span class="op">(</span><span class="va">x</span>, n <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">}</span><span class="op">)</span>
+  <span class="co"># Cleaning the directories to get a final vector of directories</span>
+    <span class="va">final_nc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span><span class="op">(</span><span class="va">nc_list</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span>
+      <span class="va">c1</span> <span class="op">&lt;-</span> <span class="fu">str_split</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unlist.html">unlist</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>, pattern <span class="op">=</span> <span class="st">"//"</span><span class="op">)</span>
+      <span class="va">c2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="va">c1</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, <span class="va">c1</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span>, sep <span class="op">=</span> <span class="st">"/"</span><span class="op">)</span><span class="op">}</span><span class="op">)</span>
+    <span class="va">files.nc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/unlist.html">unlist</a></span><span class="op">(</span><span class="va">final_nc</span><span class="op">)</span>
+ 
+<span class="co">####################################################################################</span>
+<span class="co">####### Starting the regrid process</span>
+<span class="co">#################################################################################### </span>
+  <span class="co"># Resolution</span>
+    <span class="kw">if</span><span class="op">(</span><span class="va">resolution</span> <span class="op">==</span> <span class="st">"1"</span><span class="op">)</span> <span class="op">{</span>
+      <span class="va">grd</span> <span class="op">&lt;-</span> <span class="st">"r360x180"</span>
+    <span class="op">}</span> <span class="kw">else</span> <span class="kw">if</span><span class="op">(</span><span class="va">resolution</span> <span class="op">==</span> <span class="st">"0.5"</span><span class="op">)</span> <span class="op">{</span>
+      <span class="va">grd</span> <span class="op">&lt;-</span> <span class="st">"r720x360"</span>
+    <span class="op">}</span> <span class="kw">else</span> <span class="kw">if</span><span class="op">(</span><span class="va">resolution</span> <span class="op">==</span> <span class="st">"0.25"</span><span class="op">)</span> <span class="op">{</span>
+      <span class="va">grd</span> <span class="op">&lt;-</span> <span class="st">"r1440x720"</span>
+    <span class="op">}</span>
+    
+  <span class="co"># Parallel looop</span>
+    <span class="va">UseCores</span> <span class="op">&lt;-</span> <span class="fl">3</span> <span class="co"># we can change this number</span>
+    <span class="va">cl</span> <span class="op">&lt;-</span> <span class="fu">makeCluster</span><span class="op">(</span><span class="va">UseCores</span><span class="op">)</span>  
+    <span class="fu">registerDoParallel</span><span class="op">(</span><span class="va">cl</span><span class="op">)</span>
+    <span class="fu">foreach</span><span class="op">(</span>j <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">files.nc</span><span class="op">)</span>, .packages <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"stringr"</span><span class="op">)</span><span class="op">)</span> <span class="op">%dopar%</span> <span class="op">{</span>
+      <span class="co"># Trying to auto the name for every model</span>
+        <span class="va">var_obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.html">system</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="st">"cdo -showname"</span>, <span class="va">files.nc</span><span class="op">[</span><span class="va">j</span><span class="op">]</span><span class="op">)</span>, intern <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
+        <span class="va">var_all</span> <span class="op">&lt;-</span> <span class="fu">str_replace_all</span><span class="op">(</span>string <span class="op">=</span> <span class="va">var_obj</span>, pattern <span class="op">=</span> <span class="st">" "</span>, replacement <span class="op">=</span> <span class="st">"_"</span><span class="op">)</span>
+        <span class="va">var</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html">tail</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unlist.html">unlist</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/strsplit.html">strsplit</a></span><span class="op">(</span><span class="va">var_all</span>, split <span class="op">=</span> <span class="st">"_"</span><span class="op">)</span><span class="op">)</span>, n <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> 
+      <span class="co"># Running CDO regrid</span>
+        <span class="fu"><a href="https://rdrr.io/r/base/system.html">system</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="st">"cdo -remapbil,"</span>, <span class="va">grd</span>, <span class="st">","</span>, sep <span class="op">=</span> <span class="st">""</span><span class="op">)</span>, 
+                     <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="st">"-selname"</span>,<span class="va">var</span>, sep <span class="op">=</span> <span class="st">","</span><span class="op">)</span>, <span class="va">files.nc</span><span class="op">[</span><span class="va">j</span><span class="op">]</span>, 
+                     <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="va">opath</span>, <span class="fu"><a href="https://rdrr.io/r/base/basename.html">basename</a></span><span class="op">(</span><span class="va">files.nc</span><span class="op">[</span><span class="va">j</span><span class="op">]</span><span class="op">)</span><span class="op">)</span>, sep <span class="op">=</span> <span class="op">(</span><span class="st">" "</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="co"># -P 2</span>
+    <span class="op">}</span>
+    <span class="fu">stopCluster</span><span class="op">(</span><span class="va">cl</span><span class="op">)</span>
+<span class="op">}</span></code></pre></div>
+<p>Run the regrid R function</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu">regrid</span><span class="op">(</span>ipath <span class="op">=</span> <span class="st">"/data/ClimateModels/"</span>,
+       opath <span class="op">=</span> <span class="st">"/data/ClimateModelsRegrid/"</span>,
+       resolution <span class="op">=</span> <span class="st">"0.5"</span><span class="op">)</span></code></pre></div>
+</div>
+<div id="models-with-different-ocean-depths" class="section level3">
+<h3>
+<span class="header-section-number">3.4.2</span> Models with different ocean depths<a class="anchor" aria-label="anchor" href="#models-with-different-ocean-depths"><i class="fas fa-link"></i></a>
+</h3>
+<p>Some climate models are build across different depths in the ocean. This function will help to search for ANY <strong>netCDF</strong> file in a particular directory, split the file by different ocean depth layer (e.g., surface, epipelagic, mesopelagic, bathypelagic), and merge those files by estimating a vertical average condition.</p>
+<ul>
+<li>
+<strong>CDO functions</strong>: <code>showname</code> <code>sellevel</code> <code>selname</code>
+</li>
+<li>
+<strong>Key CDO function</strong>: <code>vertmean</code>
+</li>
+</ul>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># This code was written by Isaac Brito-Morales (i.britomorales@uq.edu.au)</span>
+<span class="co"># Please do not distribute this code without permission.</span>
+<span class="co"># NO GUARANTEES THAT CODE IS CORRECT</span>
+<span class="co"># Caveat Emptor!</span>
+
+<span class="co"># Arguments</span>
+<span class="co"># ipath: directory where the netCDF files are located</span>
+<span class="co"># opath1: directory to allocate the split files</span>
+<span class="co"># opath2: directory to allocate the vertical average files</span>
+
+<span class="va">olayer</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">ipath</span>, <span class="va">opath1</span>, <span class="va">opath2</span><span class="op">)</span> <span class="op">{</span>
+
+<span class="co">####################################################################################</span>
+<span class="co">####### Defining the main packages (tryining to auto this)</span>
+<span class="co">####################################################################################</span>
+  <span class="co"># List of pacakges that we will be used</span>
+    <span class="va">list.of.packages</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"doParallel"</span>, <span class="st">"parallel"</span>, <span class="st">"stringr"</span>, <span class="st">"data.table"</span><span class="op">)</span>
+  <span class="co"># If is not installed, install the pacakge</span>
+   <span class="va">new.packages</span> <span class="op">&lt;-</span> <span class="va">list.of.packages</span><span class="op">[</span><span class="op">!</span><span class="op">(</span><span class="va">list.of.packages</span> <span class="op">%in%</span> <span class="fu"><a href="https://rdrr.io/r/utils/installed.packages.html">installed.packages</a></span><span class="op">(</span><span class="op">)</span><span class="op">[</span>,<span class="st">"Package"</span><span class="op">]</span><span class="op">)</span><span class="op">]</span>
+   <span class="kw">if</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">new.packages</span><span class="op">)</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="va">new.packages</span><span class="op">)</span>
+  <span class="co"># Load packages</span>
+    <span class="fu"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span><span class="op">(</span><span class="va">list.of.packages</span>, <span class="va">require</span>, character.only <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
+  
+<span class="co">####################################################################################</span>
+<span class="co">####### Getting the path and directories for the files</span>
+<span class="co">####################################################################################</span>
+  <span class="co"># Establish the find bash command</span>
+    <span class="va">line1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/noquote.html">noquote</a></span><span class="op">(</span><span class="st">"find"</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/noquote.html">noquote</a></span><span class="op">(</span><span class="va">ipath</span><span class="op">)</span>, <span class="st">"-type"</span>, <span class="st">"f"</span>, <span class="st">"-name"</span>, 
+                   <span class="fu"><a href="https://rdrr.io/r/base/noquote.html">noquote</a></span><span class="op">(</span><span class="st">"*.nc"</span><span class="op">)</span>, <span class="st">"-exec"</span>, <span class="st">"ls"</span>, <span class="st">"-l"</span>, <span class="st">"{}"</span><span class="op">)</span>
+    <span class="va">line2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"\\"</span>, <span class="st">";"</span><span class="op">)</span>
+    <span class="va">line3</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="va">line1</span>, <span class="va">line2</span><span class="op">)</span>
+  <span class="co"># Getting a list of directories for every netCDF file</span>
+    <span class="va">dir_files</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.html">system</a></span><span class="op">(</span><span class="va">line3</span>, intern <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
+    <span class="va">dir_nc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/strsplit.html">strsplit</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">dir_files</span>, split <span class="op">=</span> <span class="st">" "</span><span class="op">)</span>
+    <span class="va">nc_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span><span class="op">(</span><span class="va">dir_nc</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">{</span><span class="va">f1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html">tail</a></span><span class="op">(</span><span class="va">x</span>, n <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">}</span><span class="op">)</span>
+  <span class="co"># Cleaning the directories to get a final vector of directories</span>
+    <span class="va">final_nc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span><span class="op">(</span><span class="va">nc_list</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span>
+      <span class="va">c1</span> <span class="op">&lt;-</span> <span class="fu">str_split</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unlist.html">unlist</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>, pattern <span class="op">=</span> <span class="st">"//"</span><span class="op">)</span>
+      <span class="va">c2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="va">c1</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, <span class="va">c1</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span>, sep <span class="op">=</span> <span class="st">"/"</span><span class="op">)</span><span class="op">}</span><span class="op">)</span>
+    <span class="va">files.nc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/unlist.html">unlist</a></span><span class="op">(</span><span class="va">final_nc</span><span class="op">)</span>
+ 
+<span class="co">####################################################################################</span>
+<span class="co">####### Filtering by layers and generating new netCDF files with outputs</span>
+<span class="co">#################################################################################### </span>
+  <span class="co"># Parallel looop</span>
+    <span class="va">cl</span> <span class="op">&lt;-</span> <span class="fu">makeCluster</span><span class="op">(</span><span class="fl">3</span><span class="op">)</span>
+    <span class="fu">registerDoParallel</span><span class="op">(</span><span class="va">cl</span><span class="op">)</span>
+    <span class="fu">foreach</span><span class="op">(</span>j <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">files.nc</span><span class="op">)</span>, .packages <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"stringr"</span><span class="op">)</span><span class="op">)</span> <span class="op">%dopar%</span> <span class="op">{</span>
+      <span class="co"># Trying to auto the name for every model</span>
+        <span class="va">var_obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.html">system</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="st">"cdo -showname"</span>, <span class="va">files.nc</span><span class="op">[</span><span class="va">j</span><span class="op">]</span><span class="op">)</span>, intern <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
+        <span class="va">var_all</span> <span class="op">&lt;-</span> <span class="fu">str_replace_all</span><span class="op">(</span>string <span class="op">=</span> <span class="va">var_obj</span>, pattern <span class="op">=</span> <span class="st">" "</span>, replacement <span class="op">=</span> <span class="st">"_"</span><span class="op">)</span>
+        <span class="va">var</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html">tail</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unlist.html">unlist</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/strsplit.html">strsplit</a></span><span class="op">(</span><span class="va">var_all</span>, split <span class="op">=</span> <span class="st">"_"</span><span class="op">)</span><span class="op">)</span>, n <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> 
+      <span class="co"># Defining depths</span>
+        <span class="va">levels</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/vector.html">as.vector</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.html">system</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="st">"cdo showlevel"</span>, <span class="va">files.nc</span><span class="op">[</span><span class="va">j</span><span class="op">]</span><span class="op">)</span>, intern <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>
+        <span class="va">lev</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/unlist.html">unlist</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/strsplit.html">strsplit</a></span><span class="op">(</span><span class="va">levels</span>, split <span class="op">=</span> <span class="st">" "</span><span class="op">)</span><span class="op">)</span>
+        <span class="va">depths</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/unique.html">unique</a></span><span class="op">(</span><span class="va">lev</span><span class="op">[</span><span class="va">lev</span> <span class="op">!=</span> <span class="st">""</span><span class="op">]</span><span class="op">)</span>
+      <span class="co"># Some can come in cm</span>
+        <span class="kw">if</span><span class="op">(</span><span class="va">depths</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span> <span class="op">&gt;=</span> <span class="fl">50</span><span class="op">)</span> <span class="op">{</span> 
+          <span class="va">sf</span> <span class="op">&lt;-</span> <span class="va">depths</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span><span class="op">(</span><span class="va">depths</span><span class="op">)</span> <span class="op">&lt;=</span> <span class="fl">500</span><span class="op">]</span>
+          <span class="va">ep</span> <span class="op">&lt;-</span> <span class="va">depths</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span><span class="op">(</span><span class="va">depths</span><span class="op">)</span> <span class="op">&gt;=</span> <span class="fl">0</span> <span class="op">&amp;</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span><span class="op">(</span><span class="va">depths</span><span class="op">)</span> <span class="op">&lt;=</span> <span class="fl">20000</span><span class="op">]</span>
+          <span class="va">mp</span> <span class="op">&lt;-</span> <span class="va">depths</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span><span class="op">(</span><span class="va">depths</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">20000</span> <span class="op">&amp;</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span><span class="op">(</span><span class="va">depths</span><span class="op">)</span> <span class="op">&lt;=</span> <span class="fl">100000</span><span class="op">]</span>
+          <span class="va">bap</span> <span class="op">&lt;-</span> <span class="va">depths</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span><span class="op">(</span><span class="va">depths</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">100000</span><span class="op">]</span>
+        <span class="op">}</span> <span class="kw">else</span> <span class="op">{</span>
+          <span class="va">sf</span> <span class="op">&lt;-</span> <span class="va">depths</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span><span class="op">(</span><span class="va">depths</span><span class="op">)</span> <span class="op">&lt;=</span> <span class="fl">5</span><span class="op">]</span>
+          <span class="va">ep</span> <span class="op">&lt;-</span> <span class="va">depths</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span><span class="op">(</span><span class="va">depths</span><span class="op">)</span> <span class="op">&gt;=</span> <span class="fl">0</span> <span class="op">&amp;</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span><span class="op">(</span><span class="va">depths</span><span class="op">)</span> <span class="op">&lt;=</span> <span class="fl">200</span><span class="op">]</span>
+          <span class="va">mp</span> <span class="op">&lt;-</span> <span class="va">depths</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span><span class="op">(</span><span class="va">depths</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">200</span> <span class="op">&amp;</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span><span class="op">(</span><span class="va">depths</span><span class="op">)</span> <span class="op">&lt;=</span> <span class="fl">1000</span><span class="op">]</span>
+          <span class="va">bap</span> <span class="op">&lt;-</span> <span class="va">depths</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span><span class="op">(</span><span class="va">depths</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">1000</span><span class="op">]</span>
+        <span class="op">}</span>
+      <span class="co"># Running CDO</span>
+        <span class="co"># Surface</span>
+          <span class="fu"><a href="https://rdrr.io/r/base/system.html">system</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="st">"cdo -L -sellevel,"</span>, 
+                             <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="va">sf</span>, collapse <span class="op">=</span> <span class="st">","</span><span class="op">)</span>, <span class="st">","</span>, sep <span class="op">=</span> <span class="st">""</span><span class="op">)</span>, 
+                       <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="st">"-selname,"</span>, <span class="va">var</span>, sep <span class="op">=</span> <span class="st">""</span><span class="op">)</span>, <span class="va">files.nc</span><span class="op">[</span><span class="va">j</span><span class="op">]</span>, 
+                       <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="va">opath1</span>, <span class="st">"01-sf_"</span>, <span class="fu"><a href="https://rdrr.io/r/base/basename.html">basename</a></span><span class="op">(</span><span class="va">files.nc</span><span class="op">[</span><span class="va">j</span><span class="op">]</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
+        <span class="co"># Epipelagic</span>
+          <span class="fu"><a href="https://rdrr.io/r/base/system.html">system</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="st">"cdo -L -sellevel,"</span>, 
+                             <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="va">ep</span>, collapse <span class="op">=</span> <span class="st">","</span><span class="op">)</span>, <span class="st">","</span>, sep <span class="op">=</span> <span class="st">""</span><span class="op">)</span>, 
+                       <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="st">"-selname,"</span>, <span class="va">var</span>, sep <span class="op">=</span> <span class="st">""</span><span class="op">)</span>, <span class="va">files.nc</span><span class="op">[</span><span class="va">j</span><span class="op">]</span>, 
+                       <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="va">opath1</span>, <span class="st">"02-ep_"</span>, <span class="fu"><a href="https://rdrr.io/r/base/basename.html">basename</a></span><span class="op">(</span><span class="va">files.nc</span><span class="op">[</span><span class="va">j</span><span class="op">]</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
+        <span class="co"># Mesopelagic</span>
+          <span class="fu"><a href="https://rdrr.io/r/base/system.html">system</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="st">"cdo -L -sellevel,"</span>, 
+                             <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="va">mp</span>, collapse <span class="op">=</span> <span class="st">","</span><span class="op">)</span>, <span class="st">","</span>, sep <span class="op">=</span> <span class="st">""</span><span class="op">)</span>, 
+                       <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="st">"-selname,"</span>, <span class="va">var</span>, sep <span class="op">=</span> <span class="st">""</span><span class="op">)</span>, <span class="va">files.nc</span><span class="op">[</span><span class="va">j</span><span class="op">]</span>, 
+                       <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="va">opath1</span>, <span class="st">"03-mp_"</span>, <span class="fu"><a href="https://rdrr.io/r/base/basename.html">basename</a></span><span class="op">(</span><span class="va">files.nc</span><span class="op">[</span><span class="va">j</span><span class="op">]</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
+        <span class="co"># Bathypelagic</span>
+          <span class="fu"><a href="https://rdrr.io/r/base/system.html">system</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="st">"cdo -L -sellevel,"</span>, 
+                             <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="va">bap</span>, collapse <span class="op">=</span> <span class="st">","</span><span class="op">)</span>, <span class="st">","</span>, sep <span class="op">=</span> <span class="st">""</span><span class="op">)</span>, 
+                       <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="st">"-selname,"</span>, <span class="va">var</span>, sep <span class="op">=</span> <span class="st">""</span><span class="op">)</span>, <span class="va">files.nc</span><span class="op">[</span><span class="va">j</span><span class="op">]</span>, 
+                       <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="va">opath1</span>, <span class="st">"04-bap_"</span>, <span class="fu"><a href="https://rdrr.io/r/base/basename.html">basename</a></span><span class="op">(</span><span class="va">files.nc</span><span class="op">[</span><span class="va">j</span><span class="op">]</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
+    <span class="op">}</span>
+    <span class="fu">stopCluster</span><span class="op">(</span><span class="va">cl</span><span class="op">)</span>
+    
+<span class="co">####################################################################################</span>
+<span class="co">####### Getting the path and directories for the "split by depth" files</span>
+<span class="co">####################################################################################</span>
+  <span class="co"># Establish the find bash command</span>
+    <span class="va">line1.1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/noquote.html">noquote</a></span><span class="op">(</span><span class="st">"find"</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/noquote.html">noquote</a></span><span class="op">(</span><span class="va">opath1</span><span class="op">)</span>, <span class="st">"-type"</span>, <span class="st">"f"</span>, <span class="st">"-name"</span>, 
+                     <span class="fu"><a href="https://rdrr.io/r/base/noquote.html">noquote</a></span><span class="op">(</span><span class="st">"*.nc"</span><span class="op">)</span>, <span class="st">"-exec"</span>, <span class="st">"ls"</span>, <span class="st">"-l"</span>, <span class="st">"{}"</span><span class="op">)</span>
+    <span class="va">line2.1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"\\"</span>, <span class="st">";"</span><span class="op">)</span>
+    <span class="va">line3.1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="va">line1.1</span>, <span class="va">line2.1</span><span class="op">)</span>
+  <span class="co"># Getting a list of directories for every netCDF file</span>
+    <span class="va">dir_files.2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.html">system</a></span><span class="op">(</span><span class="va">line3.1</span>, intern <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
+    <span class="va">dir_nc.2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/strsplit.html">strsplit</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">dir_files.2</span>, split <span class="op">=</span> <span class="st">" "</span><span class="op">)</span>
+    <span class="va">nc_list.2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span><span class="op">(</span><span class="va">dir_nc.2</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">{</span><span class="va">f1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html">tail</a></span><span class="op">(</span><span class="va">x</span>, n <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">}</span><span class="op">)</span>
+  <span class="co"># Cleaning the directories to get a final vector of directories</span>
+    <span class="va">final_nc.2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span><span class="op">(</span><span class="va">nc_list.2</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span>
+      <span class="va">c1</span> <span class="op">&lt;-</span> <span class="fu">str_split</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unlist.html">unlist</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>, pattern <span class="op">=</span> <span class="st">"//"</span><span class="op">)</span>
+      <span class="va">c2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="va">c1</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, <span class="va">c1</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span>, sep <span class="op">=</span> <span class="st">"/"</span><span class="op">)</span><span class="op">}</span><span class="op">)</span>
+    <span class="va">files.nc.2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/unlist.html">unlist</a></span><span class="op">(</span><span class="va">final_nc.2</span><span class="op">)</span>
+    
+<span class="co">####################################################################################</span>
+<span class="co">####### Filtering by layers and generating the "weighted-average depth layer" </span>
+<span class="co">#################################################################################### </span>
+  <span class="co"># Parallel looop</span>
+    <span class="va">cl</span> <span class="op">&lt;-</span> <span class="fu">makeCluster</span><span class="op">(</span><span class="fl">3</span><span class="op">)</span>
+    <span class="fu">registerDoParallel</span><span class="op">(</span><span class="va">cl</span><span class="op">)</span>
+    <span class="fu">foreach</span><span class="op">(</span>i <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">files.nc.2</span><span class="op">)</span>, .packages <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"stringr"</span><span class="op">)</span><span class="op">)</span> <span class="op">%dopar%</span> <span class="op">{</span>
+      <span class="co"># Running CDO</span>
+        <span class="fu"><a href="https://rdrr.io/r/base/system.html">system</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="st">"cdo -L vertmean"</span>, sep <span class="op">=</span> <span class="st">""</span><span class="op">)</span>, <span class="va">files.nc.2</span><span class="op">[</span><span class="va">i</span><span class="op">]</span>, 
+                     <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="va">opath2</span>, <span class="fu"><a href="https://rdrr.io/r/base/basename.html">basename</a></span><span class="op">(</span><span class="va">files.nc.2</span><span class="op">[</span><span class="va">i</span><span class="op">]</span><span class="op">)</span><span class="op">)</span>, sep <span class="op">=</span> <span class="op">(</span><span class="st">" "</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
+    <span class="op">}</span>
+    <span class="fu">stopCluster</span><span class="op">(</span><span class="va">cl</span><span class="op">)</span>
+<span class="op">}</span></code></pre></div>
+<p>Running the ocean depth layer R function will:</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu">olayer</span><span class="op">(</span>ipath <span class="op">=</span> <span class="st">"/data/ClimateModelsRegrid/"</span>,
+       opath1 <span class="op">=</span> <span class="st">"/data/ClimateModelsRegridLayer/"</span>, 
+       opath2 <span class="op">=</span> <span class="st">"/data/ClimateModelsRegridLayerMean/"</span><span class="op">)</span></code></pre></div>
+</div>
+<div id="merge-several-netcdf-files-with-cdo" class="section level3">
+<h3>
+<span class="header-section-number">3.4.3</span> Merge several netcdf files with CDO<a class="anchor" aria-label="anchor" href="#merge-several-netcdf-files-with-cdo"><i class="fas fa-link"></i></a>
+</h3>
+<p>This function will help to merge several ocean depth layers (from the same model) into a single file.</p>
+<ul>
+<li>
+<strong>Key CDO function</strong>: <code>mergetime</code>
+</li>
+</ul>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">merge_files</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">ipath</span>, <span class="va">opath1</span><span class="op">)</span> <span class="op">{</span>
+
+<span class="co">####################################################################################</span>
+<span class="co">####### Defining the main packages (tryining to auto this)</span>
+<span class="co">####################################################################################</span>
+  <span class="co"># List of pacakges that we will be used</span>
+    <span class="va">list.of.packages</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"doParallel"</span>, <span class="st">"parallel"</span>, <span class="st">"stringr"</span>, <span class="st">"data.table"</span><span class="op">)</span>
+  <span class="co"># If is not installed, install the pacakge</span>
+    <span class="va">new.packages</span> <span class="op">&lt;-</span> <span class="va">list.of.packages</span><span class="op">[</span><span class="op">!</span><span class="op">(</span><span class="va">list.of.packages</span> <span class="op">%in%</span> <span class="fu"><a href="https://rdrr.io/r/utils/installed.packages.html">installed.packages</a></span><span class="op">(</span><span class="op">)</span><span class="op">[</span>,<span class="st">"Package"</span><span class="op">]</span><span class="op">)</span><span class="op">]</span>
+    <span class="kw">if</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">new.packages</span><span class="op">)</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="va">new.packages</span><span class="op">)</span>
+  <span class="co"># Load packages</span>
+    <span class="fu"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span><span class="op">(</span><span class="va">list.of.packages</span>, <span class="va">require</span>, character.only <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
+  
+<span class="co">####################################################################################</span>
+<span class="co">####### Getting the path and directories for the files</span>
+<span class="co">####################################################################################</span>
+  <span class="co"># Establish the find bash command</span>
+    <span class="va">line1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/noquote.html">noquote</a></span><span class="op">(</span><span class="st">"find"</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/noquote.html">noquote</a></span><span class="op">(</span><span class="va">ipath</span><span class="op">)</span>, <span class="st">"-type"</span>, <span class="st">"f"</span>, <span class="st">"-name"</span>, 
+                   <span class="fu"><a href="https://rdrr.io/r/base/noquote.html">noquote</a></span><span class="op">(</span><span class="st">"*.nc"</span><span class="op">)</span>, <span class="st">"-exec"</span>, <span class="st">"ls"</span>, <span class="st">"-l"</span>, <span class="st">"{}"</span><span class="op">)</span>
+    <span class="va">line2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"\\"</span>, <span class="st">";"</span><span class="op">)</span>
+    <span class="va">line3</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="va">line1</span>, <span class="va">line2</span><span class="op">)</span>
+  <span class="co"># Getting a list of directories for every netCDF file</span>
+    <span class="va">dir_files</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.html">system</a></span><span class="op">(</span><span class="va">line3</span>, intern <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
+    <span class="va">dir_nc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/strsplit.html">strsplit</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">dir_files</span>, split <span class="op">=</span> <span class="st">" "</span><span class="op">)</span>
+    <span class="va">nc_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span><span class="op">(</span><span class="va">dir_nc</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">{</span><span class="va">f1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html">tail</a></span><span class="op">(</span><span class="va">x</span>, n <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">}</span><span class="op">)</span>
+  <span class="co"># Cleaning the directories to get a final vector of directories</span>
+    <span class="va">final_nc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span><span class="op">(</span><span class="va">nc_list</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span>
+      <span class="va">c1</span> <span class="op">&lt;-</span> <span class="fu">str_split</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unlist.html">unlist</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>, pattern <span class="op">=</span> <span class="st">"//"</span><span class="op">)</span>
+      <span class="va">c2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="va">c1</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, <span class="va">c1</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span>, sep <span class="op">=</span> <span class="st">"/"</span><span class="op">)</span><span class="op">}</span><span class="op">)</span>
+    <span class="va">files.nc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/unlist.html">unlist</a></span><span class="op">(</span><span class="va">final_nc</span><span class="op">)</span>
+ 
+<span class="co">####################################################################################</span>
+<span class="co">####### Filtering by layers and generating new netCDF files with outputs</span>
+<span class="co">#################################################################################### </span>
+  <span class="co"># Filtering (not dplyr!) by ocean layers</span>
+    <span class="va">sf</span> <span class="op">&lt;-</span> <span class="va">files.nc</span><span class="op">[</span><span class="fu">str_detect</span><span class="op">(</span>string <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/basename.html">basename</a></span><span class="op">(</span><span class="va">files.nc</span><span class="op">)</span>, pattern <span class="op">=</span> <span class="st">"01-sf*"</span><span class="op">)</span> <span class="op">==</span> <span class="cn">TRUE</span><span class="op">]</span>
+    <span class="va">ep</span> <span class="op">&lt;-</span> <span class="va">files.nc</span><span class="op">[</span><span class="fu">str_detect</span><span class="op">(</span>string <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/basename.html">basename</a></span><span class="op">(</span><span class="va">files.nc</span><span class="op">)</span>, pattern <span class="op">=</span> <span class="st">"02-ep*"</span><span class="op">)</span> <span class="op">==</span> <span class="cn">TRUE</span><span class="op">]</span>
+    <span class="va">mp</span> <span class="op">&lt;-</span> <span class="va">files.nc</span><span class="op">[</span><span class="fu">str_detect</span><span class="op">(</span>string <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/basename.html">basename</a></span><span class="op">(</span><span class="va">files.nc</span><span class="op">)</span>, pattern <span class="op">=</span> <span class="st">"03-mp*"</span><span class="op">)</span> <span class="op">==</span> <span class="cn">TRUE</span><span class="op">]</span>
+    <span class="va">bap</span> <span class="op">&lt;-</span> <span class="va">files.nc</span><span class="op">[</span><span class="fu">str_detect</span><span class="op">(</span>string <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/basename.html">basename</a></span><span class="op">(</span><span class="va">files.nc</span><span class="op">)</span>, pattern <span class="op">=</span> <span class="st">"04-bap*"</span><span class="op">)</span> <span class="op">==</span> <span class="cn">TRUE</span><span class="op">]</span>
+  <span class="co"># Defining how many models are per ocean layer </span>
+    <span class="va">model_list_sf</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span><span class="op">(</span><span class="va">sf</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> 
+      <span class="op">{</span><span class="va">d1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/unlist.html">unlist</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/strsplit.html">strsplit</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/basename.html">basename</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>, split <span class="op">=</span> <span class="st">"_"</span><span class="op">)</span><span class="op">)</span><span class="op">[</span><span class="fl">4</span><span class="op">]</span><span class="op">}</span><span class="op">)</span>
+    <span class="va">model_list_ep</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span><span class="op">(</span><span class="va">ep</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> 
+      <span class="op">{</span><span class="va">d1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/unlist.html">unlist</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/strsplit.html">strsplit</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/basename.html">basename</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>, split <span class="op">=</span> <span class="st">"_"</span><span class="op">)</span><span class="op">)</span><span class="op">[</span><span class="fl">4</span><span class="op">]</span><span class="op">}</span><span class="op">)</span>
+    <span class="va">model_list_mp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span><span class="op">(</span><span class="va">bap</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> 
+      <span class="op">{</span><span class="va">d1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/unlist.html">unlist</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/strsplit.html">strsplit</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/basename.html">basename</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>, split <span class="op">=</span> <span class="st">"_"</span><span class="op">)</span><span class="op">)</span><span class="op">[</span><span class="fl">4</span><span class="op">]</span><span class="op">}</span><span class="op">)</span>
+    <span class="va">model_list_bap</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span><span class="op">(</span><span class="va">bap</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> 
+      <span class="op">{</span><span class="va">d1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/unlist.html">unlist</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/strsplit.html">strsplit</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/basename.html">basename</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>, split <span class="op">=</span> <span class="st">"_"</span><span class="op">)</span><span class="op">)</span><span class="op">[</span><span class="fl">4</span><span class="op">]</span><span class="op">}</span><span class="op">)</span>
+    <span class="va">models</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/unique.html">unique</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unlist.html">unlist</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">model_list_sf</span>, <span class="va">model_list_ep</span>, <span class="va">model_list_mp</span>, <span class="va">model_list_bap</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
+  <span class="co"># Parallel looop</span>
+    <span class="va">cl</span> <span class="op">&lt;-</span> <span class="fu">makeCluster</span><span class="op">(</span><span class="fl">3</span><span class="op">)</span>
+    <span class="fu">registerDoParallel</span><span class="op">(</span><span class="va">cl</span><span class="op">)</span>
+    <span class="fu">foreach</span><span class="op">(</span>i <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">models</span><span class="op">)</span>, .packages <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"stringr"</span><span class="op">)</span><span class="op">)</span> <span class="op">%dopar%</span> <span class="op">{</span>
+      <span class="va">f1</span> <span class="op">&lt;-</span> <span class="va">ep</span><span class="op">[</span><span class="fu">str_detect</span><span class="op">(</span>string <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/basename.html">basename</a></span><span class="op">(</span><span class="va">sf</span><span class="op">)</span>, pattern <span class="op">=</span> <span class="va">models</span><span class="op">[</span><span class="va">i</span><span class="op">]</span><span class="op">)</span> <span class="op">==</span> <span class="cn">TRUE</span><span class="op">]</span>
+      <span class="fu"><a href="https://rdrr.io/r/base/system.html">system</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="st">"cdo -L mergetime"</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="va">f1</span>, collapse <span class="op">=</span> <span class="st">" "</span><span class="op">)</span>, sep <span class="op">=</span> <span class="st">" "</span><span class="op">)</span>, 
+                   <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="va">opath1</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unlist.html">unlist</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/strsplit.html">strsplit</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/basename.html">basename</a></span><span class="op">(</span><span class="va">f1</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span>, <span class="st">"_"</span><span class="op">)</span><span class="op">)</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">7</span><span class="op">)</span><span class="op">]</span>, 
+                                        collapse <span class="op">=</span> <span class="st">"_"</span><span class="op">)</span>, <span class="st">".nc"</span><span class="op">)</span>, sep <span class="op">=</span> <span class="op">(</span><span class="st">" "</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
+      <span class="va">f2</span> <span class="op">&lt;-</span> <span class="va">ep</span><span class="op">[</span><span class="fu">str_detect</span><span class="op">(</span>string <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/basename.html">basename</a></span><span class="op">(</span><span class="va">ep</span><span class="op">)</span>, pattern <span class="op">=</span> <span class="va">models</span><span class="op">[</span><span class="va">i</span><span class="op">]</span><span class="op">)</span> <span class="op">==</span> <span class="cn">TRUE</span><span class="op">]</span>
+      <span class="fu"><a href="https://rdrr.io/r/base/system.html">system</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="st">"cdo -L mergetime"</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="va">f2</span>, collapse <span class="op">=</span> <span class="st">" "</span><span class="op">)</span>, sep <span class="op">=</span> <span class="st">" "</span><span class="op">)</span>, 
+                   <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="va">opath1</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unlist.html">unlist</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/strsplit.html">strsplit</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/basename.html">basename</a></span><span class="op">(</span><span class="va">f2</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span>, <span class="st">"_"</span><span class="op">)</span><span class="op">)</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">7</span><span class="op">)</span><span class="op">]</span>, 
+                                        collapse <span class="op">=</span> <span class="st">"_"</span><span class="op">)</span>, <span class="st">".nc"</span><span class="op">)</span>, sep <span class="op">=</span> <span class="op">(</span><span class="st">" "</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
+      <span class="va">f3</span> <span class="op">&lt;-</span> <span class="va">mp</span><span class="op">[</span><span class="fu">str_detect</span><span class="op">(</span>string <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/basename.html">basename</a></span><span class="op">(</span><span class="va">mp</span><span class="op">)</span>, pattern <span class="op">=</span> <span class="va">models</span><span class="op">[</span><span class="va">i</span><span class="op">]</span><span class="op">)</span> <span class="op">==</span> <span class="cn">TRUE</span><span class="op">]</span>
+      <span class="fu"><a href="https://rdrr.io/r/base/system.html">system</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="st">"cdo -L mergetime"</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="va">f3</span>, collapse <span class="op">=</span> <span class="st">" "</span><span class="op">)</span>, sep <span class="op">=</span> <span class="st">" "</span><span class="op">)</span>, 
+                   <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="va">opath1</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unlist.html">unlist</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/strsplit.html">strsplit</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/basename.html">basename</a></span><span class="op">(</span><span class="va">f3</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span>, <span class="st">"_"</span><span class="op">)</span><span class="op">)</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">7</span><span class="op">)</span><span class="op">]</span>, 
+                                        collapse <span class="op">=</span> <span class="st">"_"</span><span class="op">)</span>, <span class="st">".nc"</span><span class="op">)</span>, sep <span class="op">=</span> <span class="op">(</span><span class="st">" "</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
+      <span class="va">f4</span> <span class="op">&lt;-</span> <span class="va">bap</span><span class="op">[</span><span class="fu">str_detect</span><span class="op">(</span>string <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/basename.html">basename</a></span><span class="op">(</span><span class="va">bap</span><span class="op">)</span>, pattern <span class="op">=</span> <span class="va">models</span><span class="op">[</span><span class="va">i</span><span class="op">]</span><span class="op">)</span> <span class="op">==</span> <span class="cn">TRUE</span><span class="op">]</span>
+      <span class="fu"><a href="https://rdrr.io/r/base/system.html">system</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="st">"cdo -L mergetime"</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="va">f4</span>, collapse <span class="op">=</span> <span class="st">" "</span><span class="op">)</span>, sep <span class="op">=</span> <span class="st">" "</span><span class="op">)</span>, 
+                   <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="va">opath1</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unlist.html">unlist</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/strsplit.html">strsplit</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/basename.html">basename</a></span><span class="op">(</span><span class="va">f4</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span>, <span class="st">"_"</span><span class="op">)</span><span class="op">)</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">7</span><span class="op">)</span><span class="op">]</span>, 
+                                        collapse <span class="op">=</span> <span class="st">"_"</span><span class="op">)</span>, <span class="st">".nc"</span><span class="op">)</span>, sep <span class="op">=</span> <span class="op">(</span><span class="st">" "</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
+    <span class="op">}</span>
+    <span class="fu">stopCluster</span><span class="op">(</span><span class="va">cl</span><span class="op">)</span>
+<span class="op">}</span></code></pre></div>
+<p>Running the merge function</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu">merge_files</span><span class="op">(</span>ipath <span class="op">=</span> <span class="st">"/Users/bri273/Desktop/CDO/models_regrid_vertmean/"</span>,
+            opath1 <span class="op">=</span> <span class="st">"/Users/bri273/Desktop/CDO/models_regrid_zmerge/"</span><span class="op">)</span></code></pre></div>
+<p>The functions above were build based on OS. For Linux please check:</p>
+<ul>
+<li>
+<strong>regrid</strong>: <a href="https://github.com/IsaakBM/CDO-climate-data-operators-/blob/master/scripts/r_scripts/01_ClimateModels_regrid02_HPC.R">regrid R function</a>
+</li>
+<li>
+<strong>ocean layers</strong>: <a href="https://github.com/IsaakBM/CDO-climate-data-operators-/blob/master/scripts/r_scripts/02_ClimateModels_olayers02_HPC.R">ocean layer R function</a>
+</li>
+<li>
+<strong>merge</strong>: calculates <a href="https://github.com/IsaakBM/CDO-climate-data-operators-/blob/master/scripts/r_scripts/03_ClimateModels_MergeFiles02_HPC.R">merge R function</a>
+</li>
+</ul>
+</div>
+<div id="some-useful-cdo-functions" class="section level3">
+<h3>
+<span class="header-section-number">3.4.4</span> Some useful CDO functions<a class="anchor" aria-label="anchor" href="#some-useful-cdo-functions"><i class="fas fa-link"></i></a>
+</h3>
+<p>CDO is more than just regridding. Some interesting useful functions are:</p>
+<ul>
+<li>
+<strong>yearmean</strong>: calculates the <strong>annual mean</strong> of a monthly data input <strong>netCDF</strong> file</li>
+<li>
+<strong>yearmin</strong>: calculates the <strong>annual min</strong> of a monthly data input <strong>netCDF</strong> file</li>
+<li>
+<strong>yearmax</strong>: calculates the <strong>annual max</strong> of a monthly data input <strong>netCDF</strong> file</li>
+<li>
+<strong>ensmean</strong>: calculates the <strong>ensemble mean</strong> of several <strong>netCDF</strong> files. If the input files are different models, this function will estimate a mean of all those models</li>
+</ul>
+</div>
+</div>
+</div>
+  <div class="chapter-nav">
+<div class="prev"><a href="cmip6-models.html"><span class="header-section-number">2</span> CMIP6 models</a></div>
+<div class="next"><a href="netcdf-files-in-r-raster-spatial-objects.html"><span class="header-section-number">4</span> netCDF files in R: Raster, Spatial objects</a></div>
+</div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
+    <nav id="toc" data-toggle="toc" aria-label="On this page"><h2>On this page</h2>
+      <ul class="nav navbar-nav">
+<li><a class="nav-link" href="#getting-started-with-climate-data-operators-cdo"><span class="header-section-number">3</span> Getting Started with Climate Data Operators (CDO)</a></li>
+<li>
+<a class="nav-link" href="#installation-process"><span class="header-section-number">3.1</span> Installation Process</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#macos"><span class="header-section-number">3.1.1</span> MacOS</a></li>
+<li><a class="nav-link" href="#windows-10"><span class="header-section-number">3.1.2</span> Windows 10</a></li>
+</ul>
+</li>
+<li><a class="nav-link" href="#linux"><span class="header-section-number">3.2</span> Linux</a></li>
+<li><a class="nav-link" href="#ncview-a-netcdf-visual-browser"><span class="header-section-number">3.3</span> Ncview: a netCDF visual browser</a></li>
+<li>
+<a class="nav-link" href="#working-with-cdo"><span class="header-section-number">3.4</span> Working with CDO</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#regrid-process"><span class="header-section-number">3.4.1</span> Regrid process</a></li>
+<li><a class="nav-link" href="#models-with-different-ocean-depths"><span class="header-section-number">3.4.2</span> Models with different ocean depths</a></li>
+<li><a class="nav-link" href="#merge-several-netcdf-files-with-cdo"><span class="header-section-number">3.4.3</span> Merge several netcdf files with CDO</a></li>
+<li><a class="nav-link" href="#some-useful-cdo-functions"><span class="header-section-number">3.4.4</span> Some useful CDO functions</a></li>
+</ul>
+</li>
+</ul>
+
+      <div class="book-extra">
+        <ul class="list-unstyled">
+<li><a id="book-source" href="https://github.com/rstudio/bookdown-demo/blob/master/02-ProcessClimateModels.Rmd">View source <i class="fab fa-github"></i></a></li>
+          <li><a id="book-edit" href="https://github.com/rstudio/bookdown-demo/edit/master/02-ProcessClimateModels.Rmd">Edit this page <i class="fab fa-github"></i></a></li>
+        </ul>
+</div>
+    </nav>
+</div>
+
+</div>
+</div> <!-- .container -->
+
+<footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>"<strong>Climate models for ecologist</strong>" was written by Isaac Brito-Morales. It was last built on 2021-09-02.</p>
+  </div>
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>This book was built by the <a class="text-light" href="https://bookdown.org">bookdown</a> R package.</p>
+  </div>
+
+</div></div>
+</footer>
+</body>
+</html>
